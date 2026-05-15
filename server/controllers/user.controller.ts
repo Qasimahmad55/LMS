@@ -2,12 +2,13 @@ import { NextFunction, Request, Response } from "express"
 import { CatchAsyncError } from "../middleware/catchAsyncErrors"
 import ErrorHandler from "../utils/errorHandler"
 import userModel, { IUser } from "../models/user.model"
-import jwt, { Secret } from 'jsonwebtoken'
+import jwt, { JwtPayload, Secret } from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import ejs from 'ejs'
 import path from "path"
 import sendEmail from "../utils/sendMail"
-import { sendToken } from "../utils/jwt"
+import { accessTokenOptions, refreshTokenOptions, sendToken } from "../utils/jwt"
+import { redis } from "../utils/redis"
 dotenv.config()
 //register user
 interface IRegisterationBody {
@@ -147,11 +148,50 @@ export const logoutUser = CatchAsyncError(async (req: Request, res: Response, ne
     try {
         res.cookie("access_token", "", { maxAge: 1 })
         res.cookie("refresh_token", "", { maxAge: 1 })
+        const userId = req.user?._id || ''
+        await redis.del(userId.toString())
 
         res.status(200).json({
             success: true,
             message: "Logged out Successfully"
         })
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 400))
+    }
+})
+
+//update access token
+export const updateaccessToken = CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const refresh_token = req.cookies.refresh_token as string
+        const decoded = jwt.verify(refresh_token, process.env.REFRESH_TOKEN as string) as JwtPayload
+
+        const message = "Could not refresh token"
+        if (!decoded) {
+            return next(new ErrorHandler(message, 400))
+        }
+
+        const session = await redis.get(decoded.id as string)
+        if (!session) {
+            return next(new ErrorHandler(message, 400))
+
+        }
+        const user = JSON.parse(session)
+        const accessToken = jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN as string, {
+            expiresIn: "5m"
+        })
+        const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_TOKEN as string, {
+            expiresIn: "3d"
+        })
+
+        res.cookie("access_token", accessToken, accessTokenOptions)
+        res.cookie("refresh_token", refreshToken, refreshTokenOptions)
+
+        res.status(200).json({
+            status: "success",
+            accessToken
+        })
+
     } catch (error: any) {
         return next(new ErrorHandler(error.message, 400))
     }
