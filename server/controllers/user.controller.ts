@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express"
-import { CatchAsyncError } from "../middleware/catchAsyncErrors"
 import ErrorHandler from "../utils/errorHandler"
 import userModel, { IUser } from "../models/user.model"
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken'
@@ -9,6 +8,8 @@ import path from "path"
 import sendEmail from "../utils/sendMail"
 import { accessTokenOptions, refreshTokenOptions, sendToken } from "../utils/jwt"
 import { redis } from "../utils/redis"
+import { getUserById } from "../services/user.service"
+import { CatchAsyncHandler } from "../middleware/catchAsyncErrors"
 dotenv.config()
 //register user
 interface IRegisterationBody {
@@ -18,7 +19,7 @@ interface IRegisterationBody {
     avatar?: string
 }
 
-export const RegisterUser = CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+export const RegisterUser = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { name, email, password } = req.body
         const isEmail = await userModel.findOne({ email })
@@ -84,7 +85,7 @@ interface IActivationRequest {
     activation_code: string,
 }
 
-export const activateUser = CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+export const activateUser = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { activation_token, activation_code } = req.body as IActivationRequest
 
@@ -120,7 +121,7 @@ interface ILoginRequest {
     password: string
 }
 
-export const loginUser = CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+export const loginUser = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { email, password } = req.body as ILoginRequest
         if (!email || !password) {
@@ -144,7 +145,7 @@ export const loginUser = CatchAsyncError(async (req: Request, res: Response, nex
 })
 //logout user
 
-export const logoutUser = CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+export const logoutUser = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     try {
         res.cookie("access_token", "", { maxAge: 1 })
         res.cookie("refresh_token", "", { maxAge: 1 })
@@ -161,7 +162,7 @@ export const logoutUser = CatchAsyncError(async (req: Request, res: Response, ne
 })
 
 //update access token
-export const updateaccessToken = CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+export const updateaccessToken = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const refresh_token = req.cookies.refresh_token as string
         const decoded = jwt.verify(refresh_token, process.env.REFRESH_TOKEN as string) as JwtPayload
@@ -183,7 +184,7 @@ export const updateaccessToken = CatchAsyncError(async (req: Request, res: Respo
         const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_TOKEN as string, {
             expiresIn: "3d"
         })
-
+        req.user = user
         res.cookie("access_token", accessToken, accessTokenOptions)
         res.cookie("refresh_token", refreshToken, refreshTokenOptions)
 
@@ -194,5 +195,81 @@ export const updateaccessToken = CatchAsyncError(async (req: Request, res: Respo
 
     } catch (error: any) {
         return next(new ErrorHandler(error.message, 400))
+    }
+})
+//get userInfo by id
+export const getUserInfo = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId = req.user?._id
+        if (userId) {
+            getUserById(userId.toString(), res)
+        }
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 400))
+    }
+})
+//social auth
+interface ISocialAuthBody {
+    email: string,
+    name: string,
+    avatar: string
+}
+export const socialAuth = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { email, name, avatar } = req.body as ISocialAuthBody
+        const user = await userModel.findOne({ email })
+        if (!user) {
+            // The user model expects an object: { public_id, url }.
+            const avatarObj = { public_id: "", url: avatar }
+            const newUser = await userModel.create({ email, name, avatar: avatarObj })
+            sendToken(newUser, 201, res)
+        } else {
+            sendToken(user, 200, res)
+        }
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 400))
+
+    }
+})
+
+//update user info
+interface IUpdateUserInfo {
+    name?: string,
+    email?: string
+}
+
+export const udpateUserInfo = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { name, email } = req.body as IUpdateUserInfo
+        const userId = req.user?._id
+        if (!userId) {
+            return next(new ErrorHandler("Please login to access this resource", 401))
+        }
+
+        const user = await userModel.findById(userId.toString())
+
+        if (email && user) {
+            const isEmailExists = await userModel.findOne({ email })
+            if (isEmailExists) {
+                return next(new ErrorHandler("Email already exists", 400))
+            }
+            user.email = email
+        }
+
+        if (name && user) {
+            user.name = name
+        }
+
+        await user?.save()
+
+        await redis.set(userId?.toString(), JSON.stringify(user))
+
+        res.status(201).json({
+            success: true,
+            user
+        })
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 400))
+
     }
 })
