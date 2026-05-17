@@ -3,8 +3,8 @@ import express, { NextFunction, Request, Response } from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { errorMiddleware } from './middleware/error'
-import UserRouter from './routes/user.route'
-
+import userRouter from './routes/user.route'
+import courseRouter from './routes/course.route'
 export const app = express()
 
 app.use(express.json({ limit: "50mb" }))
@@ -13,7 +13,8 @@ app.use(cors({
     origin: process.env.ORIGIN
 }))
 
-app.use('/api/v1', UserRouter)
+app.use('/api/v1', userRouter)
+app.use('/api/v1', courseRouter)
 
 //test route
 
