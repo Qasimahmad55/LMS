@@ -8,6 +8,8 @@ import CourseModel from "../models/course.model";
 import { redis } from "../utils/redis";
 import mongoose from "mongoose";
 import path from "path";
+import ejs from 'ejs'
+import sendEmail from "../utils/sendMail";
 
 //upload course
 export const uploadCourse = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -235,8 +237,81 @@ export const AddAnswer = CatchAsyncHandler(async (req: Request, res: Response, n
                 title: courseContent.title
             }
 
-            const html = await ejs.renderFile(path.join(__dirname, "../mails/question-reply.ejs"))
+            const html = await ejs.renderFile(path.join(__dirname, "../mails/question-reply.ejs"), data)
+
+            try {
+                await sendEmail({
+                    email: question.user.email,
+                    subject: "Question reply",
+                    template: "question-reply.ejs",
+                    data
+                })
+            } catch (error: any) {
+                return next(new ErrorHandler(error.message, 500))
+            }
         }
+
+        res.status(200).json({
+            success: true,
+            course
+        })
+
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 500))
+    }
+})
+//add review in course
+
+interface IAddReviewData {
+    review: string,
+    rating: number,
+    userId: string
+}
+
+export const addReview = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userCourseList = req.user?.courses
+        const courseId = req.params.id
+
+        //to check if course already exists
+        const courseExists = userCourseList?.some((course: any) => course._id.toString() === courseId.toString())
+
+        if (!courseExists) {
+            return next(new ErrorHandler("You are not eligible to access this course", 400))
+        }
+
+        const course = await CourseModel.findById(courseId)
+
+        const { review, rating } = req.body as IAddReviewData
+
+        const reviewData: any = {
+            user: req.user,
+            comment: review,
+            rating
+        }
+
+        course?.reviews.push(reviewData)
+
+        let avg = 0
+
+        course?.reviews.forEach((rev: any) => {
+            avg += rev.rating
+        })
+        if (course) {
+            course.ratings = avg / course.reviews.length
+        }
+
+        await course?.save()
+
+        const notification = {
+            title: "New Review Recieved",
+            message: `${req.user?.name} has given a review in ${course?.name}`
+        }
+        //create notification 
+        res.status(200).json({
+            success: true,
+            course
+        })
 
     } catch (error: any) {
         return next(new ErrorHandler(error.message, 500))
