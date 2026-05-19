@@ -10,6 +10,7 @@ import mongoose from "mongoose";
 import path from "path";
 import ejs from 'ejs'
 import sendEmail from "../utils/sendMail";
+import notificationModel from "../models/notification.model";
 
 //upload course
 export const uploadCourse = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -160,6 +161,7 @@ export const addQuestion = CatchAsyncHandler(async (req: Request, res: Response,
     try {
         const { question, courseId, contentId } = req.body as IAddQuestionData
         const course = await CourseModel.findById(courseId)
+        const userId = req.user?._id.toString()
 
         if (!mongoose.Types.ObjectId.isValid(contentId)) {
             return next(new ErrorHandler("Invalid content id", 400))
@@ -180,6 +182,12 @@ export const addQuestion = CatchAsyncHandler(async (req: Request, res: Response,
         //for adding question to course content
 
         courseContent.questions.push(newQuestion)
+
+        await notificationModel.create({
+            userId,
+            title: "New Question",
+            message: `You have a new question in ${courseContent.title}`
+        })
 
         await course?.save()
         res.status(200).json({
@@ -204,6 +212,7 @@ export const AddAnswer = CatchAsyncHandler(async (req: Request, res: Response, n
         const { answer, courseId, contentId, questionId } = req.body as IAddAnswerData
 
         const course = await CourseModel.findById(courseId)
+        const userId = req.user?._id.toString()
 
         if (!mongoose.Types.ObjectId.isValid(contentId)) {
             return next(new ErrorHandler("Invalid content id", 400))
@@ -231,6 +240,12 @@ export const AddAnswer = CatchAsyncHandler(async (req: Request, res: Response, n
 
         if (req.user?._id === question.user._id) {
             //create a notification
+            await notificationModel.create({
+                userId,
+                title: "New Question Reply Recieved",
+                message: `You have a new question reply in ${courseContent.title}`
+            })
+
         } else {
             const data = {
                 name: question.user.name,

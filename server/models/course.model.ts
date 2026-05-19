@@ -92,7 +92,7 @@ const courseSchema = new Schema<ICourse>({
         required: true
     },
     price: {
-        tyepe: Number,
+        type: Number,
         required: true
     },
     estimatedPrice: {
@@ -104,13 +104,13 @@ const courseSchema = new Schema<ICourse>({
             // required: true
         },
         url: {
-            // required: true,
             type: String
+            // required: true,
         }
     },
     tags: {
         type: String,
-        requried: true
+        required: true
     },
     level: {
         type: String,
@@ -118,7 +118,7 @@ const courseSchema = new Schema<ICourse>({
     },
     demoUrl: {
         type: String,
-        requried: true
+        required: true
     },
     benefits: [{ title: String }],
     prerequisites: [{ title: String }],
