@@ -1,6 +1,6 @@
 import express from 'express'
-import { activateUser, getUserInfo, loginUser, logoutUser, RegisterUser, socialAuth, udpateUserInfo, updateaccessToken, updatePassword, updateProfilePicture } from '../controllers/user.controller'
-import { isAuthenticated } from '../middleware/auth'
+import { activateUser, getAllUser, getUserInfo, loginUser, logoutUser, RegisterUser, socialAuth, udpateUserInfo, updateaccessToken, updatePassword, updateProfilePicture } from '../controllers/user.controller'
+import { authorizeRole, isAuthenticated } from '../middleware/auth'
 
 const router = express.Router()
 
@@ -9,6 +9,7 @@ router.post('/activate-user', activateUser)
 router.post('/login-user', loginUser)
 router.get('/logout-user', isAuthenticated, logoutUser)
 router.get('/me', isAuthenticated, getUserInfo)
+router.get('/get-users', isAuthenticated, authorizeRole("admin"), getAllUser)
 router.get('/refresh', updateaccessToken)
 router.post('/socialAuth', socialAuth)
 router.put('/update-user-info', isAuthenticated, udpateUserInfo)

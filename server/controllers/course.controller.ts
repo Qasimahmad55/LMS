@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { CatchAsyncHandler } from "../middleware/catchAsyncErrors";
 import ErrorHandler from "../utils/errorHandler";
 import { v2 as cloudinary } from 'cloudinary'
-import { createCourse } from "../services/course.service";
+import { createCourse, getAllCoursesService } from "../services/course.service";
 import CourseModel from "../models/course.model";
 import { redis } from "../utils/redis";
 import mongoose from "mongoose";
@@ -99,7 +99,7 @@ export const getSingleCourse = CatchAsyncHandler(async (req: Request, res: Respo
     }
 })
 //get all course --without purchasing
-export const getAllCourses = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+export const getAllCoursesPurchased = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const isCached = await redis.get("allCourses")
         if (isCached) {
@@ -372,5 +372,13 @@ export const addReplyToReview = CatchAsyncHandler(async (req: Request, res: Resp
 
     } catch (error: any) {
         return next(new ErrorHandler(error.message, 500))
+    }
+})
+//get all courses
+export const getAllCourses = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        getAllCoursesService(res)
+    } catch (error: any) {
+        return next(new ErrorHandler(error.messagge, 500))
     }
 })

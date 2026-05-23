@@ -43,8 +43,13 @@ export const updateNotification = CatchAsyncHandler(async (req: Request, res: Re
 })
 //delete notification --only admin
 
-cron.schedule("*/5 * * * * *", function () {
-    console.log("-----------------------");
-    console.log("running cron");
+cron.schedule("0 0 0 * * *", async () => {
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+    console.log(thirtyDaysAgo);
     
+    await notificationModel.deleteMany({ status: "read", createdAt: { $lt: thirtyDaysAgo } })
+
+    console.log("deleted read notifications");
+
 })
+

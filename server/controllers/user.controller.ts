@@ -8,7 +8,7 @@ import path from "path"
 import sendEmail from "../utils/sendMail"
 import { accessTokenOptions, refreshTokenOptions, sendToken } from "../utils/jwt"
 import { redis } from "../utils/redis"
-import { getUserById } from "../services/user.service"
+import { getAllUsersService, getUserById } from "../services/user.service"
 import { CatchAsyncHandler } from "../middleware/catchAsyncErrors"
 import cloudinary from 'cloudinary'
 dotenv.config()
@@ -377,5 +377,13 @@ export const updateProfilePicture = CatchAsyncHandler(async (req: Request, res: 
     } catch (error: any) {
         return next(new ErrorHandler(error.message, 400))
 
+    }
+})
+//get all users
+export const getAllUser = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        getAllUsersService(res)
+    } catch (error: any) {
+        return next(new ErrorHandler(error.messagge, 500))
     }
 })
