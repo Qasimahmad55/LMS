@@ -8,7 +8,7 @@ import path from "path"
 import sendEmail from "../utils/sendMail"
 import { accessTokenOptions, refreshTokenOptions, sendToken } from "../utils/jwt"
 import { redis } from "../utils/redis"
-import { getAllUsersService, getUserById } from "../services/user.service"
+import { getAllUsersService, getUserById, updateUserRoleService } from "../services/user.service"
 import { CatchAsyncHandler } from "../middleware/catchAsyncErrors"
 import cloudinary from 'cloudinary'
 dotenv.config()
@@ -385,5 +385,37 @@ export const getAllUser = CatchAsyncHandler(async (req: Request, res: Response, 
         getAllUsersService(res)
     } catch (error: any) {
         return next(new ErrorHandler(error.messagge, 500))
+    }
+})
+//update user --only forr admin
+export const updateUserRole = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id, role } = req.body
+        updateUserRoleService(res, id, role)
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 500))
+    }
+})
+//delete user --only for admin
+export const deleteUser = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.params
+        const user = await userModel.findById(id)
+        if (!user) {
+            return next(new ErrorHandler("User not found", 404))
+        }
+
+        await user.deleteOne({ id })
+        if (typeof id === "string") {
+
+            await redis.del(id)
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "User deleted successfully"
+        })
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 500))
     }
 })
