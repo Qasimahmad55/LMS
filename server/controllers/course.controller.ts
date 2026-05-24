@@ -113,7 +113,7 @@ export const getAllCoursesPurchased = CatchAsyncHandler(async (req: Request, res
         } else {
             const AllCourses = await CourseModel.find().select("-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links")
 
-            await redis.set("allCourses", JSON.stringify(AllCourses))
+            await redis.set("allCourses", JSON.stringify(AllCourses), "EX", 604800)
 
             res.status(200).json({
                 success: true,
