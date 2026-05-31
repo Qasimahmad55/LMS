@@ -1,32 +1,38 @@
 @import "tailwindcss";
 
+/* Dark mode class strategy */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* =========================
+   THEME CONFIGURATION
+========================= */
+
+@theme {
+  /* Fonts */
+  --font-poppins: var(--font-Poppins);
+  --font-josefin: var(--font-Josefin);
+
+  /* Breakpoints */
+  --breakpoint-400px: 400px;
+  --breakpoint-800px: 800px;
+  --breakpoint-1000px: 1000px;
+  --breakpoint-1100px: 1100px;
+  --breakpoint-1200px: 1200px;
+  --breakpoint-1300px: 1300px;
+  --breakpoint-1500px: 1500px;
+
+  /* Animations */
+  --animate-float: float 5s ease-in-out infinite;
+}
+
+/* =========================
+   ROOT VARIABLES
+========================= */
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #1771c6;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #f5f5f5b0;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #32ae7e;
-}
-
-input[type="number"] {
-  -moz-appearance: textfield;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -37,15 +43,62 @@ input[type="number"] {
   }
 }
 
+/* =========================
+   GLOBAL STYLES
+========================= */
+
 body {
   color: rgb(var(--foreground-rgb));
 }
 
-.hero_animation {
-  background-image: linear-gradient(147.92deg,
-      hsla(239, 76%, 53%, 0.456) 10.41%,
-      hsla(0, 0%, 100%, 0) 89.25%);
-  animation: changeBackgroundColor 8s infinite alternate;
+/* =========================
+   SCROLLBAR
+========================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1771c6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #f5f5f5b0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #32ae7e;
+}
+
+/* =========================
+   INPUT FIXES
+========================= */
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* =========================
+   KEYFRAMES
+========================= */
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(-10px);
+  }
+
+  50% {
+    transform: translateY(10px);
+  }
 }
 
 @keyframes changeBackgroundColor {
@@ -74,4 +127,101 @@ body {
   83.33% {
     opacity: 0.4;
   }
+}
+
+@keyframes hover {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-2px);
+  }
+
+  40% {
+    transform: translateX(2px);
+  }
+
+  60% {
+    transform: translateX(-2px);
+  }
+
+  80% {
+    transform: translateX(2px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* =========================
+   CUSTOM UTILITIES
+========================= */
+
+@utility font-Poppins {
+  font-family: var(--font-Poppins);
+}
+
+@utility font-Josefin {
+  font-family: var(--font-Josefin);
+}
+
+@utility bg-gradient-radial {
+  background-image: radial-gradient(var(--tw-gradient-stops));
+}
+
+@utility bg-gradient-conic {
+  background-image: conic-gradient(from 180deg at 50% 50%,
+      var(--tw-gradient-stops));
+}
+
+@utility hero_animation {
+  background-image: linear-gradient(147.92deg,
+      hsla(239, 76%, 53%, 0.456) 10.41%,
+      hsla(0, 0%, 100%, 0) 89.25%);
+
+  animation: changeBackgroundColor 8s infinite alternate;
+}
+
+@utility shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+@utility hover-anim {
+  animation: hover 6s ease-in-out infinite;
+}
+
+@utility glow-text {
+  color: white;
+
+  text-shadow:
+    0 0 10px cyan,
+    0 0 20px cyan,
+    0 0 40px cyan,
+    0 0 80px cyan;
+}
+
+@utility glow-text-white {
+  color: white;
+
+  text-shadow:
+    0 0 10px rgb(0, 94, 255),
+    0 0 20px rgb(18, 54, 113),
+    0 0 40px rgb(0, 94, 255),
+    0 0 80px rgb(0, 94, 255);
 }
