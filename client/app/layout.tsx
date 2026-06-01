@@ -39,7 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${poppins.variable} ${josefin.variable} bg-white! bg-no-repeat dark:bg-linear-to-b dark:from-gray-900 dark:to-black duration-300`}>
+      <body className={`${poppins.variable} ${josefin.variable} overflow-hidden bg-white! bg-no-repeat dark:bg-linear-to-b dark:from-gray-900 dark:to-black duration-300`}>
         <ThemeProvider attribute='class' defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>
