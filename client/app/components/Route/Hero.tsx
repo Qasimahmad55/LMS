@@ -2,10 +2,10 @@
 
 // import { useGetHeroDataQuery } from "@/redux/features/layout/layoutApi"
 import Image from "next/image"
-import heroBanner from "../../public/assests/hero-banner-1.png"
-import client1 from "../../public/assests/client-1.jpg"
-import client2 from "../../public/assests/client-2.jpg"
-import client3 from "../../public/assests/client-3.jpg"
+import heroBanner from "../../../public/assets/hero-banner-1.png"
+import client1 from "../../../public/assets/client-1.jpg"
+import client2 from "../../../public/assets/client-2.jpg"
+import client3 from "../../../public/assets/client-3.jpg"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { type FC, useState } from "react"
@@ -19,7 +19,6 @@ const Hero = () => {
     return (
         <>
             {(
-
                 <div className="w-full min-h-screen flex flex-col-reverse lg:flex-row-reverse items-center justify-center px-4 sm:px-6 lg:px-8 py-12 lg:py-0">
                     <div className="w-1/2 lg:w-[40%] flex justify-center items-center order-2 lg:order-1 mt-8 lg:mt-0">
                         <div className="relative w-full max-w-md">
@@ -54,7 +53,7 @@ const Hero = () => {
                             />
                             <div
                                 className="absolute flex items-center justify-center w-[50px] cursor-pointer h-[50px] right-0 top-0 bg-[#39c1f3] rounded-r-[5px]"
-                                // onClick={handleSearch}
+                            // onClick={handleSearch}
                             >
                                 <BiSearch className="text-white" size={30} />
                             </div>

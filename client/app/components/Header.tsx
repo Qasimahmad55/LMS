@@ -4,16 +4,19 @@ import React, { FC, useState } from 'react'
 import NavItems from '../utils/NavItems'
 import ThemeSwitcher from './ThemeSwitcher'
 import { HiOutlineMenuAlt3, HiOutlineUserCircle } from 'react-icons/hi'
+import CustomModal from '../utils/CustomModal'
+import Login from './Auth/Login'
 
 type Props = {
     open: boolean,
-    setOpen: (open: boolean) => void
-    activeItem: number
+    setOpen: (open: boolean) => void,
+    activeItem: number,
+    route: string,
+    setRoute: (route: string) => void
 }
 
 
-
-const Header: FC<Props> = ({ activeItem, setOpen }) => {
+const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
     const [active, setActive] = useState(false)
     const [openSidebar, setOpenSidebar] = useState(false)
     const currentYear = new Date().getFullYear()
@@ -24,16 +27,15 @@ const Header: FC<Props> = ({ activeItem, setOpen }) => {
         })
     }
 
-    const handleClose = (e: any) => {
-        if (e.target.id === 'screen') {
+    const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
+        const target = e.target as HTMLElement | null
+        if (target && target.id === 'screen') {
             setOpenSidebar(false)
         }
     }
 
     return (
-        <div
-            className='w-full relative'
-        >
+        <div className='w-full relative' >
             <div className={
                 `${active
                     ? "dark:bg-opacity-50 dark:bg-linear-to-b dark:from-gray-900 dark:to-black fixed top-0 left-0 w-full h-[80px] z-[80] border-b dark:border-[#ffffff11c] shadow-xl transition duration-500 "
@@ -95,6 +97,23 @@ const Header: FC<Props> = ({ activeItem, setOpen }) => {
                     </div>
                 )}
             </div>
+            {
+                route === 'Login' && (
+                    <>
+                        {
+                            open && (
+                                <CustomModal
+                                    open={open}
+                                    setOpen={setOpen}
+                                    setRoute={setRoute}
+                                    activeItem={activeItem}
+                                    component={Login}
+                                />
+                            )
+                        }
+                    </>
+                )
+            }
         </div>
     )
 }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Heading from "./utils/Heading";
 import Header from "./components/Header";
-import Hero from "./Route/Hero";
+import Hero from "./components/Route/Hero";
 
 // export const metadata: Metadata = {
 //   title: "ELearning",
@@ -15,6 +15,8 @@ import Hero from "./Route/Hero";
 const Page = () => {
   const [open, setOpen] = useState(false)
   const [activeItem, setActiveItem] = useState(0)
+  const [route, setRoute] = useState('Login')
+
   return (
     <div>
       <Heading
@@ -27,8 +29,10 @@ const Page = () => {
         open={open}
         setOpen={setOpen}
         activeItem={activeItem}
+        route={route}
+        setRoute={setRoute}
       />
-      <Hero/>
+      <Hero />
     </div>
   );
 };
