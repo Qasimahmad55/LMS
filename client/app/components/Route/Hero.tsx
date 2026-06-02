@@ -12,8 +12,6 @@ import { type FC, useState } from "react"
 import { BiSearch } from "react-icons/bi"
 // import Loader from "../Loader/Loader"
 
-
-
 const Hero = () => {
 
     return (

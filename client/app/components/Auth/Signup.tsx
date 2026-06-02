@@ -10,20 +10,21 @@ type Props = {
 }
 
 const schema = Yup.object().shape({
+    name: Yup.string().required("Please enter your name"),
     email: Yup.string().email("Invalid email!").required("Please enter your email"),
     password: Yup.string().required("Please enter your password").min(6)
 })
 
-const Login: FC<Props> = ({ setRoute }) => {
+const Signup: FC<Props> = ({ setRoute }) => {
     const [show, setShow] = useState(false)
 
     const formik = useFormik(
         {
-            initialValues: { email: "", password: "" },
+            initialValues: { name: "", email: "", password: "" },
             validationSchema: schema,
-            onSubmit: async ({ email, password }) => {
-                console.log(email, password);
+            onSubmit: async ({ name, email, password }) => {
 
+                setRoute("Verification")
             }
         }
     )
@@ -31,15 +32,35 @@ const Login: FC<Props> = ({ setRoute }) => {
     const { errors, touched, values, handleChange, handleSubmit } = formik;
 
     return (
-        <div className='w-full'>
+        <div className='w-full max-h-auto'>
             <h1
                 className={`${styles.title}`}
             >
-                Login with ELearning
+                Join to ELearning
             </h1>
             <form
                 onSubmit={handleSubmit}
             >
+                <div className='mb-3'>
+                    <label htmlFor="name"
+                        className={`${styles.label}`}
+                    >
+                        Enter your Name
+                    </label>
+                    <input
+                        type="text"
+                        name=""
+                        value={values.name}
+                        onChange={handleChange}
+                        id="name"
+                        placeholder="John Doe"
+                        className={`${errors.name && touched.name && "border-red-500"} ${styles.input
+                            }`}
+                    />
+                    {errors.name && touched.name && (
+                        <span className="text-red-500 pt-2 block">{errors.name}</span>
+                    )}
+                </div>
                 <label htmlFor="email"
                     className={`${styles.label}`}
                 >
@@ -97,7 +118,7 @@ const Login: FC<Props> = ({ setRoute }) => {
                 <div className="w-full mt-6">
                     <input
                         type="submit"
-                        value="Login"
+                        value="Sign Up"
                         className={`${styles.button} hover:bg-[#0b4b8b]`}
                     />
                 </div>
@@ -105,7 +126,7 @@ const Login: FC<Props> = ({ setRoute }) => {
                 <h5 className="text-center pt-4 font-Poppins text-[14px] text-black dark:text-white">
                     Or join with
                 </h5>
-                <div className="flex items-center justify-center my-3">
+                <div className="flex items-center justify-center mt-2">
                     <FcGoogle
                         size={30}
                         className="cursor-pointer mr-2"
@@ -118,12 +139,12 @@ const Login: FC<Props> = ({ setRoute }) => {
                     />
                 </div>
                 <h5 className="text-center pt-4 font-Poppins text-[14px]">
-                    Not have any account?{" "}
+                    Already have an account?{" "}
                     <span
                         className="text-[#2190ff] pl-1 cursor-pointer"
-                        onClick={() => setRoute("Sign-Up")}
+                        onClick={() => setRoute("Login")}
                     >
-                        Sign up
+                        Sign in
                     </span>
                 </h5>
             </form>
@@ -132,4 +153,4 @@ const Login: FC<Props> = ({ setRoute }) => {
     )
 }
 
-export default Login
+export default Signup
