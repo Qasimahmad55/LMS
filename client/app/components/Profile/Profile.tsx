@@ -4,14 +4,15 @@ import SideBarProfile from './SideBarProfile'
 import { useLogoutQuery } from '@/app/redux/features/auth/authApi'
 import { redirect } from 'next/navigation'
 import { signOut } from 'next-auth/react'
+import ProfileInfo from './ProfileInfo'
 
 type Props = {
     user: any
 }
 
-const Profile = ({ user }:Props) => {
+const Profile = ({ user }: Props) => {
     const [scroll, setScroll] = useState(false)
-    const [avatar] = useState("");
+    const [avatar, setAvatar] = useState(null);
     const [active, setActive] = useState(1);
     const [logout, setLogout] = useState(false);
 
@@ -52,10 +53,10 @@ const Profile = ({ user }:Props) => {
             )}
             {active === 2 && (
                 <div className="w-full h-full bg-transparent mt-[80px]">
-                    <ChangePassword />
+                    {/* <ChangePassword /> */}
                 </div>
             )}
-            {active === 3 && (
+            {/* {active === 3 && (
                 <div className="w-full pl-7 px-2 800px:px-10 800px:pl-8 mt-[80px]">
                     <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] 1500px:grid-cols-3 1500px:gap-[35px] mb-12 border-0">
                         {courses &&
@@ -69,7 +70,7 @@ const Profile = ({ user }:Props) => {
                         </h1>
                     )}
                 </div>
-            )}
+            )} */}
         </div>
     )
 }
