@@ -2,9 +2,9 @@
 import React, { useState } from 'react'
 import SideBarProfile from './SideBarProfile'
 import { useLogoutQuery } from '@/app/redux/features/auth/authApi'
-import { redirect } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import ProfileInfo from './ProfileInfo'
+import ChangePassword from './ChangePassword'
 
 type Props = {
     user: any
@@ -53,7 +53,7 @@ const Profile = ({ user }: Props) => {
             )}
             {active === 2 && (
                 <div className="w-full h-full bg-transparent mt-[80px]">
-                    {/* <ChangePassword /> */}
+                    <ChangePassword />
                 </div>
             )}
             {/* {active === 3 && (

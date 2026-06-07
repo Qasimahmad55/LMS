@@ -244,21 +244,13 @@ interface IUpdateUserInfo {
 
 export const udpateUserInfo = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { name, email } = req.body as IUpdateUserInfo
+        const { name } = req.body as IUpdateUserInfo
         const userId = req.user?._id
         if (!userId) {
             return next(new ErrorHandler("Please login to access this resource", 401))
         }
 
         const user = await userModel.findById(userId.toString())
-
-        if (email && user) {
-            const isEmailExists = await userModel.findOne({ email })
-            if (isEmailExists) {
-                return next(new ErrorHandler("Email already exists", 400))
-            }
-            user.email = email
-        }
 
         if (name && user) {
             user.name = name
@@ -288,7 +280,7 @@ export const updatePassword = CatchAsyncHandler(async (req: Request, res: Respon
     try {
         const { oldPassword, newPassword } = req.body as IUpdatePassword
 
-        if (!oldPassword || newPassword) {
+        if (!oldPassword || !newPassword) {
             return next(new ErrorHandler("Please enter old and new password", 400))
         }
 

@@ -5,8 +5,9 @@ import Loader from '../Loader/Loader'
 import { styles } from '@/app/styles/styles'
 import { useSession } from 'next-auth/react'
 import avatardefault from '../../../public/assets/avatar.png'
-import { useUpdateAvatarMutation } from '@/app/redux/features/user/userApi'
+import { useEditProfileMutation, useUpdateAvatarMutation } from '@/app/redux/features/user/userApi'
 import { useLoadUserQuery } from '@/app/redux/features/api/apiSlice'
+import toast from 'react-hot-toast'
 
 type Props = {
     avatar: string,
@@ -23,6 +24,7 @@ const ProfileInfo = ({ avatar, user }: Props) => {
     const { } = useLoadUserQuery(undefined, { skip: loadUser ? false : true })
 
     const [updateAvatar, { isSuccess, error }] = useUpdateAvatarMutation()
+    const [editProfile, { isSuccess: success, error: updateError }] = useEditProfileMutation()
 
     const { data } = useSession()
 
@@ -40,17 +42,25 @@ const ProfileInfo = ({ avatar, user }: Props) => {
     }
 
     useEffect(() => {
-        if (isSuccess) {
+        if (isSuccess || success) {
             setLoadUser(true)
         }
-        if (error) {
+        if (error || updateError) {
             console.log(error);
         }
-    }, [isSuccess, error])
+        if (success) {
+            toast.success("Profile updated successfully")
+        }
+    }, [isSuccess, error, success, updateError])
 
 
-    const handleSubmit = async () => {
-
+    const handleSubmit = async (e: any) => {
+        e.preventDefault()
+        if (name !== "") {
+            await editProfile({
+                name,
+            })
+        }
     }
 
     return (
