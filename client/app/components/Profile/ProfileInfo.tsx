@@ -1,29 +1,58 @@
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiOutlineCamera } from 'react-icons/ai'
 import Loader from '../Loader/Loader'
 import { styles } from '@/app/styles/styles'
 import { useSession } from 'next-auth/react'
 import avatardefault from '../../../public/assets/avatar.png'
+import { useUpdateAvatarMutation } from '@/app/redux/features/user/userApi'
+import { useLoadUserQuery } from '@/app/redux/features/api/apiSlice'
 
 type Props = {
     avatar: string,
     user: any
 }
 
-const imageHandler = async () => {
 
-}
-
-const handleSubmit = async () => {
-
-}
 
 const ProfileInfo = ({ avatar, user }: Props) => {
     const [isLoading, setIsLoading] = useState(false)
     const [name, setName] = useState(user && user.name);
+
     const [loadUser, setLoadUser] = useState(false);
+    const { } = useLoadUserQuery(undefined, { skip: loadUser ? false : true })
+
+    const [updateAvatar, { isSuccess, error }] = useUpdateAvatarMutation()
+
     const { data } = useSession()
+
+    const imageHandler = async (e: any) => {
+        const file = e.target.files[0]
+        const fileReader = new FileReader()
+
+        fileReader.onload = () => {
+            if (fileReader.readyState === 2) {
+                const avatar = fileReader.result
+                updateAvatar(avatar)
+            }
+        }
+        fileReader.readAsDataURL(e.target.files[0])
+    }
+
+    useEffect(() => {
+        if (isSuccess) {
+            setLoadUser(true)
+        }
+        if (error) {
+            console.log(error);
+        }
+    }, [isSuccess, error])
+
+
+    const handleSubmit = async () => {
+
+    }
+
     return (
         <>
             <div className="w-full flex justify-center">

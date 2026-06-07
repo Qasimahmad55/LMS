@@ -12,7 +12,7 @@ type Props = {
 
 const Profile = ({ user }: Props) => {
     const [scroll, setScroll] = useState(false)
-    const [avatar, setAvatar] = useState(null);
+    const [avatar, setAvatar] = useState("");
     const [active, setActive] = useState(1);
     const [logout, setLogout] = useState(false);
 

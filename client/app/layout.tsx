@@ -6,7 +6,7 @@ import { Poppins } from "next/font/google";
 import { Josefin_Sans } from "next/font/google";
 import ThemeProvider from "./utils/Theme-provider";
 import { Toaster } from "react-hot-toast";
-import { Providers } from '../Provider'
+import { Providers } from './Provider'
 import { SessionProvider } from 'next-auth/react'
 import Loader from './components/Loader/Loader';
 import { useLoadUserQuery } from './redux/features/api/apiSlice';
