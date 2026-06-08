@@ -69,6 +69,7 @@ const DashboardHeader: FC<Props> = ({ open, setOpen }) => {
                     <h5 className="text-center text-[20px] font-Poppins text-black dark:text-white p-3">
                         Notifications
                     </h5>
+                    
                     {notifications &&
                         notifications.map((item: any, index: number) => (
                             <div
@@ -79,7 +80,7 @@ const DashboardHeader: FC<Props> = ({ open, setOpen }) => {
                                     <p className="text-black dark:text-white">{item.title}</p>
                                     <p
                                         className="text-black dark:text-white cursor-pointer"
-                                        // onClick={() => handleNotificationStatusChange(item._id)}
+                                    // onClick={() => handleNotificationStatusChange(item._id)}
                                     >
                                         Mark as read
                                     </p>
@@ -92,6 +93,7 @@ const DashboardHeader: FC<Props> = ({ open, setOpen }) => {
                                 </p>
                             </div>
                         ))}
+
                 </div>
             )}
         </div>
