@@ -31,16 +31,31 @@ const CourseInformation = ({ courseInfo, setCourseInfo, active, setActive }: Pro
         }
     }
 
-    const handleDragLeave = () => {
-
+    const handleDragLeave = (e: any) => {
+        e.preventDefault()
+        setDragging(false)
     }
 
-    const handleDragOver = () => {
-
+    const handleDragOver = (e: any) => {
+        e.preventDefault()
+        setDragging(true)
     }
 
-    const handleDrop = () => {
+    const handleDrop = (e: any) => {
+        e.preventDefault()
+        setDragging(false)
 
+        const file = e.dataTransfer.files?.[0]
+
+        if (file) {
+            const fileReader = new FileReader
+            fileReader.onload = (e: any) => {
+                if (fileReader.readyState === 2) {
+                    setCourseInfo({ ...courseInfo, thumbnail: fileReader.result })
+                }
+            }
+            fileReader.readAsDataURL(file)
+        }
     }
 
     return (

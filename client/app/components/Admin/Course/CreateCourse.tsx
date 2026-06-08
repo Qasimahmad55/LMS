@@ -4,11 +4,12 @@ import CourseInformation from './CourseInformation'
 import CourseOptions from './CourseOptions'
 import CourseContent from './CourseContent'
 import CoursePreview from './CoursePreview'
+import CourseData from './CourseData'
 
 type Props = {}
 
 const CreateCourse = (props: Props) => {
-    const [active, setActive] = useState(0)
+    const [active, setActive] = useState(2)
     const [courseInfo, setCourseInfo] = useState({
         name: "",
         description: "",
@@ -21,7 +22,7 @@ const CreateCourse = (props: Props) => {
         thumbnail: "",
     });
     const [benefits, setBenefits] = useState([{ title: "" }])
-    const [prereq, setPrereq] = useState([{ title: "" }])
+    const [prerequisites, setPrerequisites] = useState([{ title: "" }])
 
     const [courseContentData, setCourseContentData] = useState([
         {
