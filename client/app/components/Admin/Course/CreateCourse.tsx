@@ -9,7 +9,7 @@ import CourseData from './CourseData'
 type Props = {}
 
 const CreateCourse = (props: Props) => {
-    const [active, setActive] = useState(2)
+    const [active, setActive] = useState(3)
     const [courseInfo, setCourseInfo] = useState({
         name: "",
         description: "",
@@ -43,6 +43,46 @@ const CreateCourse = (props: Props) => {
 
     const [courseData, setCourseData] = useState({});
 
+    const handleSubmit = () => {
+        //format benefits array
+        const formattedBenefits = benefits.map((benefit) => ({ title: benefit.title }))
+        //format prereqs
+        const formattedPrerequesites = prerequisites.map((prereq) => ({ title: prereq.title }))
+        //format course content
+        const formattedCourseContentData = courseContentData.map(
+            (courseContent) => ({
+                videoUrl: courseContent.videoUrl,
+                title: courseContent.title,
+                description: courseContent.description,
+                videoLength: courseContent.videoLength,
+                videoSection: courseContent.videoSection,
+                links: courseContent.links.map((link) => ({
+                    title: link.title,
+                    url: link.url,
+                })),
+                suggestion: courseContent.suggestion,
+            })
+        );
+        //prepare our data project
+        const data = {
+            name: courseInfo.name,
+            description: courseInfo.description,
+            price: courseInfo.price,
+            estimatedPrice: courseInfo.estimatedPrice,
+            tags: courseInfo.tags,
+            thumbnail: courseInfo.thumbnail,
+            level: courseInfo.level,
+            demoUrl: courseInfo.demoUrl,
+            totalVideos: courseContentData.length,
+            benefits: formattedBenefits,
+            prerequisites: formattedPrerequesites,
+            courseData: formattedCourseContentData,
+        };
+        setCourseData(data);
+    };
+    const handleCourseCreate = () => {
+
+    };
 
     return (
         <div className="w-full flex flex-col min-h-screen">
@@ -90,5 +130,4 @@ const CreateCourse = (props: Props) => {
         </div>
     )
 }
-
 export default CreateCourse

@@ -1,5 +1,5 @@
 
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, response, Response } from "express";
 import { CatchAsyncHandler } from "../middleware/catchAsyncErrors";
 import ErrorHandler from "../utils/errorHandler";
 import { v2 as cloudinary } from 'cloudinary'
@@ -11,6 +11,7 @@ import path from "path";
 import ejs from 'ejs'
 import sendEmail from "../utils/sendMail";
 import notificationModel from "../models/notification.model";
+import axios from "axios";
 
 //upload course
 export const uploadCourse = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -404,4 +405,26 @@ export const deleteCourse = CatchAsyncHandler(async (req: Request, res: Response
     } catch (error: any) {
         return next(new ErrorHandler(error.message, 500))
     }
+})
+
+//generate video url
+export const generateVideoUrl = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { videoId } = req.body
+        const response = await axios.post(
+            `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
+            { ttl: 300 },
+            {
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: `Apisecret ${process.env.VDIOCIPHER_API_SECRET}`,
+                },
+            }
+        )
+        res.json(response.data)
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 400))
+    }
+
 })
