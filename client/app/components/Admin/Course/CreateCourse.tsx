@@ -11,6 +11,21 @@ import { redirect } from 'next/navigation'
 
 type Props = {}
 
+type CourseContentLink = {
+    title: string
+    url: string
+}
+
+type CourseContentItem = {
+    videoUrl: string
+    title: string
+    description: string
+    videoLength: string
+    videoSection: string
+    links: CourseContentLink[]
+    suggestion?: string
+}
+
 const CreateCourse = (props: Props) => {
     const [createCourse, { isLoading, isSuccess, error }] = useCreateCourseMutation()
     const [active, setActive] = useState(0)
@@ -28,7 +43,7 @@ const CreateCourse = (props: Props) => {
     const [benefits, setBenefits] = useState([{ title: "" }])
     const [prerequisites, setPrerequisites] = useState([{ title: "" }])
 
-    const [courseContentData, setCourseContentData] = useState([
+    const [courseContentData, setCourseContentData] = useState<CourseContentItem[]>([
         {
             videoUrl: "",
             title: "",
@@ -77,7 +92,7 @@ const CreateCourse = (props: Props) => {
                     title: link.title,
                     url: link.url,
                 })),
-                suggestion: courseContent.suggestion,
+                suggestion: courseContent.suggestion ?? "",
             })
         );
         //prepare our data project

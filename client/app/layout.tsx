@@ -1,6 +1,6 @@
 // import { Geist, Geist_Mono } from "next/font/google";
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "./globals.css";
 import { Poppins } from "next/font/google";
 import { Josefin_Sans } from "next/font/google";
@@ -61,11 +61,24 @@ export default function RootLayout({
 }
 
 const Custom: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isLoading } = useLoadUserQuery({});
+  const [shouldLoadUser, setShouldLoadUser] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    setShouldLoadUser(localStorage.getItem("lms-authenticated") === "true")
+  }, [])
+
+  const { isLoading } = useLoadUserQuery({}, {
+    skip: shouldLoadUser !== true
+  });
+
+  if (shouldLoadUser === null) {
+    return <>{children}</>
+  }
+
   return (
     <>
       {
-        isLoading ? <Loader /> : <>{children}</>
+        shouldLoadUser && isLoading ? <Loader /> : <>{children}</>
       }
     </>
   )

@@ -2,7 +2,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { apiSlice } from './features/api/apiSlice'
 import { authSlice } from './features/auth/authSlice'
-
 export const store = configureStore({
     reducer: {
         [apiSlice.reducerPath]: apiSlice.reducer,
@@ -14,6 +13,10 @@ export const store = configureStore({
 //call our refresh token functioon on every page load
 
 const initializeApp = async () => {
+    if (typeof window === 'undefined' || localStorage.getItem("lms-authenticated") !== "true") {
+        return
+    }
+
     await store.dispatch(apiSlice.endpoints.refreshToken.initiate({}, { forceRefetch: true }))
 
     await store.dispatch(apiSlice.endpoints.loadUser.initiate({}, { forceRefetch: true }))

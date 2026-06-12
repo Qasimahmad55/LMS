@@ -410,7 +410,15 @@ export const deleteCourse = CatchAsyncHandler(async (req: Request, res: Response
 //generate video url
 export const generateVideoUrl = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { videoId } = req.body
+        let { videoId } = req.body;
+
+        if (!videoId || typeof videoId !== 'string') {
+            return next(new ErrorHandler("A valid Video ID string is required", 400));
+        }
+
+        videoId = videoId.trim();
+
+
         const response = await axios.post(
             `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
             { ttl: 300 },
@@ -418,13 +426,21 @@ export const generateVideoUrl = CatchAsyncHandler(async (req: Request, res: Resp
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json",
-                    Authorization: `Apisecret ${process.env.VDIOCIPHER_API_SECRET}`,
+                    Authorization: `Apisecret ${process.env.VDOCIPHER_API_SECRET}`,
                 },
             }
-        )
-        res.json(response.data)
-    } catch (error: any) {
-        return next(new ErrorHandler(error.message, 400))
-    }
+        );
 
-})
+        res.status(200).json(response.data);
+
+    } catch (error: any) {
+
+        console.error("VDOCIPHER ERROR DETAILS:", error.response?.data || error.message);
+
+        const statusCode = error.response?.status || 500;
+
+        const errorMessage = error.response?.data?.message || error.message || "Failed to generate video OTP";
+
+        return next(new ErrorHandler(errorMessage, statusCode));
+    }
+});

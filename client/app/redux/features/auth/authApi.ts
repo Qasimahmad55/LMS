@@ -1,5 +1,5 @@
 import { apiSlice } from "../api/apiSlice"
-import { userLoggedIn, userLoggedOut, userRegisteration } from "./authSlice"
+import { userLoaded, userLoggedIn, userLoggedOut, userRegisteration } from "./authSlice"
 
 
 type RegisterationResponse = {
@@ -55,9 +55,10 @@ export const authApi = apiSlice.injectEndpoints({
             async onQueryStarted(org, { queryFulfilled, dispatch }) {
                 try {
                     const result = await queryFulfilled
+                    localStorage.setItem("lms-authenticated", "true")
                     dispatch(
                         userLoggedIn({
-                            accessToken: result.data.activationToken,
+                            accessToken: result.data.accessToken,
                             user: result.data.user
                         })
                     )
@@ -79,9 +80,10 @@ export const authApi = apiSlice.injectEndpoints({
             async onQueryStarted(org, { queryFulfilled, dispatch }) {
                 try {
                     const result = await queryFulfilled
+                    localStorage.setItem("lms-authenticated", "true")
                     dispatch(
                         userLoggedIn({
-                            accessToken: result.data.activationToken,
+                            accessToken: result.data.accessToken,
                             user: result.data.user
                         })
                     )
@@ -99,6 +101,8 @@ export const authApi = apiSlice.injectEndpoints({
             }),
             async onQueryStarted(org, { queryFulfilled, dispatch }) {
                 try {
+                    await queryFulfilled
+                    localStorage.removeItem("lms-authenticated")
                     dispatch(
                         userLoggedOut()
                     )

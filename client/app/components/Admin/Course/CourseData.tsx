@@ -22,7 +22,10 @@ const CourseData = ({
 
     const handleBenefitChange = (index: number, value: any) => {
         const updatedBenefits = [...benefits]
-        updatedBenefits[index] = value
+        updatedBenefits[index] = {
+            ...updatedBenefits[index],
+            title: value,
+        }
         setBenefits(updatedBenefits)
 
     }
@@ -33,7 +36,10 @@ const CourseData = ({
 
     const handlePrerequisitesChange = (index: number, value: any) => {
         const updatedPrereqs = [...prerequisites]
-        updatedPrereqs[index] = value
+        updatedPrereqs[index] = {
+            ...updatedPrereqs[index],
+            title: value,
+        }
         setPrerequisites(updatedPrereqs)
     }
 
@@ -70,7 +76,7 @@ const CourseData = ({
                         placeholder="You will be able to build a full stack LMS Platform..."
                         required
                         className={`${styles.input} my-2`}
-                        value={benefit?.title}
+                        value={benefit?.title ?? ""}
                         onChange={(e) => handleBenefitChange(index, e.target.value)}
                     />
                 ))}
@@ -94,7 +100,7 @@ const CourseData = ({
                         placeholder="You need basic knowledge of MERN stack"
                         required
                         className={`${styles.input} my-2`}
-                        value={prerequisites?.title}
+                        value={prerequisites?.title ?? ""}
                         onChange={(e) => handlePrerequisitesChange(index, e.target.value)}
                     />
                 ))}
@@ -106,13 +112,13 @@ const CourseData = ({
             </div>
             <div className="w-full flex items-center justify-between">
                 <div
-                    className="w-full 800px:w-[180px] flex items-center justify-center h-[40px] bg-[#37a39a] text-center text-[#fff] rounded mt-8 m-[20px] cursor-pointer"
+                    className="w-full 800px:w-45 flex items-center justify-center h-10 bg-[#37a39a] text-center text-white rounded mt-8 m-5 cursor-pointer"
                     onClick={() => prevButton()}
                 >
                     Previous
                 </div>
                 <div
-                    className="w-full 800px:w-[180px] flex items-center justify-center h-[40px] bg-[#37a39a] text-center text-[#fff] rounded mt-8 m-[20px] cursor-pointer"
+                    className="w-full 800px:w-45 flex items-center justify-center h-10 bg-[#37a39a] text-center text-white rounded mt-8 m-5 cursor-pointer"
                     onClick={() => handleOptions()}
                 >
                     Next
