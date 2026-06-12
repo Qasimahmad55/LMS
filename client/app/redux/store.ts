@@ -10,14 +10,12 @@ export const store = configureStore({
     devTools: false,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware)
 })
-//call our refresh token functioon on every page load
+//call our load user functioon on every page load
 
 const initializeApp = async () => {
     if (typeof window === 'undefined' || localStorage.getItem("lms-authenticated") !== "true") {
         return
     }
-
-    await store.dispatch(apiSlice.endpoints.refreshToken.initiate({}, { forceRefetch: true }))
 
     await store.dispatch(apiSlice.endpoints.loadUser.initiate({}, { forceRefetch: true }))
 }

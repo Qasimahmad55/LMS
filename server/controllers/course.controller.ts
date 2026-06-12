@@ -42,7 +42,10 @@ export const editCourse = CatchAsyncHandler(async (req: Request, res: Response, 
     try {
         const data = req.body
         const thumbnail = data.thumbnail
-        if (thumbnail) {
+        const courseId = req.params.id
+        const courseData = await CourseModel.findById(courseId) as any
+
+        if (thumbnail && !thumbnail.startsWith("https")) {
             await cloudinary.uploader.destroy(thumbnail.public_id)
             const myCloud = await cloudinary.uploader.upload(thumbnail, {
                 folder: "coursesThumbnails"
@@ -54,7 +57,12 @@ export const editCourse = CatchAsyncHandler(async (req: Request, res: Response, 
             }
         }
 
-        const courseId = req.params.id
+        if (thumbnail.startsWith("https")) {
+            data.thumbnail = {
+                public_id: courseData?.thumbnail.public_id,
+                url: courseData?.thumbnail.url
+            }
+        }
         const course = await CourseModel.findByIdAndUpdate(courseId, {
             $set: data,
         },
@@ -102,27 +110,13 @@ export const getSingleCourse = CatchAsyncHandler(async (req: Request, res: Respo
 //get all course --without purchasing
 export const getAllCoursesPurchased = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const isCached = await redis.get("allCourses")
-        if (isCached) {
 
-            const courses = JSON.parse(isCached);
+        const AllCourses = await CourseModel.find().select("-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links")
 
-            res.status(200).json({
-                success: true,
-                courses,
-            });
-        } else {
-            const AllCourses = await CourseModel.find().select("-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links")
-
-            await redis.set("allCourses", JSON.stringify(AllCourses), "EX", 604800)
-
-            res.status(200).json({
-                success: true,
-                AllCourses
-            })
-        }
-
-
+        res.status(200).json({
+            success: true,
+            AllCourses
+        })
     } catch (error: any) {
         return next(new ErrorHandler(error.message, 500))
     }

@@ -1,3 +1,4 @@
+'use client'
 import React, { FC, useState } from "react";
 // import DashboardWidgets from "../../components/Admin/Widgets/DashboardWidgets";
 import DashboardHeader from "./DashboardHeader";
