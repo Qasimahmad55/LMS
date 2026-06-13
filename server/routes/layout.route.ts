@@ -8,6 +8,6 @@ router.post("/create-layout", updateaccessToken, isAuthenticated, authorizeRole(
 
 router.put("/edit-layout", updateaccessToken, isAuthenticated, authorizeRole("admin"), editLayout)
 
-router.get("/get-layout", updateaccessToken, isAuthenticated, authorizeRole("admin"), getLayoutByType)
+router.get("/get-layout:type", updateaccessToken, isAuthenticated, authorizeRole("admin"), getLayoutByType)
 
 export default router

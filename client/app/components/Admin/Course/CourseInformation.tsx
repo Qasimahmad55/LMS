@@ -1,6 +1,7 @@
 'use client'
+import { useGetHeroDataQuery } from '@/app/redux/features/layout/layoutApi'
 import { styles } from '@/app/styles/styles'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 type Props = {
     courseInfo: any,
@@ -11,7 +12,14 @@ type Props = {
 
 const CourseInformation = ({ courseInfo, setCourseInfo, active, setActive }: Props) => {
     const [dragging, setDragging] = useState(false);
+    const { data } = useGetHeroDataQuery("Categories", {})
     const [categories, setCategories] = useState([])
+
+    useEffect(() => {
+        if (data) {
+            setCategories(data.layout.categories)
+        }
+    }, [data])
 
     const handleSubmit = (e: any) => {
         e.preventDefault()
