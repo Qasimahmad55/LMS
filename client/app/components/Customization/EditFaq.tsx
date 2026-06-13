@@ -25,6 +25,9 @@ const EditFaq = () => {
         if (data) {
             setQuestions(data.layout.faq);
         }
+    }, [data]);
+
+    useEffect(() => {
         if (layoutSuccess) {
             refetch();
             toast.success("Faq-updated successfully!");
@@ -33,7 +36,8 @@ const EditFaq = () => {
             const errorData = error as any;
             toast.error(errorData?.data?.message);
         }
-    }, [data, layoutSuccess, error, refetch]);
+    }, [layoutSuccess, error]);
+
 
 
     const toggleQuestion = (id: any) => {
@@ -58,6 +62,7 @@ const EditFaq = () => {
         setQuestions([
             ...questions,
             {
+                _id: Date.now().toString(),
                 question: "",
                 answer: "",
             },

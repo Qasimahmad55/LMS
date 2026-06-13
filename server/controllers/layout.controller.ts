@@ -22,6 +22,7 @@ export const createLayout = CatchAsyncHandler(async (req: Request, res: Response
             })
 
             const banner: any = {
+                type: "Banner",
                 banner: {
                     image: {
                         public_id: myCloud.public_id,
@@ -135,17 +136,18 @@ export const editLayout = CatchAsyncHandler(async (req: Request, res: Response, 
         return next(new ErrorHandler(error.message, 500))
     }
 })
-//get layout by type
-export const getLayoutByType = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { type } = req.params
-        const layout = await LayoutModel.findOne({ type })
+export const getLayoutByType = CatchAsyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { type } = req.params;
+            const layout = await LayoutModel.findOne({ type });
 
-        res.status(200).json({
-            success: true,
-            layout
-        })
-    } catch (error: any) {
-        return next(new ErrorHandler(error.message, 500))
-    }
-})
+            res.status(200).json({
+                success: true,
+                layout
+            })
+
+        } catch (error: any) {
+            return next(new ErrorHandler(error.message, 500));
+        }
+    })

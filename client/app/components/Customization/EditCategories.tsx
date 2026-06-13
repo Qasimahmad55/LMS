@@ -21,6 +21,9 @@ const EditCategories = () => {
         if (data) {
             setCategories(data.layout.categories);
         }
+    }, [data]);
+
+    useEffect(() => {
         if (layoutSuccess) {
             refetch()
             toast.success("Categories Updated Successfully!");
@@ -29,7 +32,7 @@ const EditCategories = () => {
             const errorData = error as any;
             toast.error(errorData?.data?.message);
         }
-    }, [data, layoutSuccess, error, refetch]);
+    }, [layoutSuccess, error]);
 
     const handleCategoriesAdd = (id: any, value: string) => {
 
@@ -47,7 +50,10 @@ const EditCategories = () => {
         } else {
             setCategories((prevCategories: any) => [
                 ...prevCategories,
-                { title: "" },
+                {
+                    _id: Date.now().toString(),
+                    title: ""
+                },
             ]);
         }
     }
@@ -83,7 +89,7 @@ const EditCategories = () => {
                     <h1 className={`${styles.title}`}>All Categories</h1>
                     {categories.map((item: any, index: number) => {
                         return (
-                            <div className="p-3" key={index}>
+                            <div className="p-3" key={item._id}>
                                 <div className="flex items-center w-full justify-center">
                                     <input
                                         className={`${styles.input} !w-[unset] !border-none !text-[20px]`}

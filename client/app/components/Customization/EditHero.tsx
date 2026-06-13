@@ -26,6 +26,9 @@ const EditHero = (props: Props) => {
             setSubTitle(data?.layout?.banner?.subTitle);
             setImage(data?.layout?.banner?.image?.url);
         }
+    }, [data]);
+
+    useEffect(() => {
         if (isSuccess) {
             refetch();
             toast.success("Hero-section updated successfully!");
@@ -34,7 +37,7 @@ const EditHero = (props: Props) => {
             const errorData = error as any;
             toast.error(errorData?.data?.message);
         }
-    }, [data, isSuccess, refetch, error]);
+    }, [isSuccess, error]);
 
 
     const handleUpdate = (e: any) => {
