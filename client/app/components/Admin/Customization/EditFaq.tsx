@@ -2,7 +2,7 @@
 import { useEditLayoutDataMutation, useGetHeroDataQuery } from '@/app/redux/features/layout/layoutApi'
 
 import React, { useEffect, useState } from 'react'
-import Loader from '../Loader/Loader'
+import Loader from '../../Loader/Loader'
 import { HiMinus, HiPlus } from 'react-icons/hi'
 import { styles } from '@/app/styles/styles'
 import { AiOutlineDelete } from 'react-icons/ai'

@@ -1,9 +1,10 @@
 "use client";
-import AdminProtected from "@/app/hooks/AdminProtected";
-import AdminDashboardHero from "../../components/Admin/DashboardHero";
 import Heading from "@/app/utils/Heading";
+import DashboardHero from "@/app/components/Admin/DashboardHero";
 import AdminSidebar from "@/app/components/Admin/SideBar/AdminSidebar";
-import EditCategories from "@/app/components/Admin/Customization/EditCategories";
+import AdminProtected from "@/app/hooks/AdminProtected";
+import OrderAnalytics from "@/app/components/Admin/Analytics/OrderAnalytics";
+
 
 const Page = () => {
     return (
@@ -19,8 +20,8 @@ const Page = () => {
                         <AdminSidebar />
                     </div>
                     <div className="w-[85%]">
-                        <AdminDashboardHero />
-                        <EditCategories />
+                        <DashboardHero isDashboard={true} />
+                        <OrderAnalytics />
                     </div>
                 </div>
             </AdminProtected>

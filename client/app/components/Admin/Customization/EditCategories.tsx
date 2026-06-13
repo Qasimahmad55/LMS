@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import Loader from '../Loader/Loader';
+import Loader from '../../Loader/Loader';
 import { styles } from '@/app/styles/styles';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { IoMdAddCircleOutline } from 'react-icons/io';

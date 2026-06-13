@@ -1,7 +1,7 @@
 "use client"
 import DashBoardHero from '@/app/components/Admin/DashboardHero'
 import AdminSidebar from '@/app/components/Admin/SideBar/AdminSidebar'
-import EditFaq from '@/app/components/Customization/EditFaq'
+import EditFaq from '@/app/components/Admin/Customization/EditFaq'
 import AdminProtected from '@/app/hooks/AdminProtected'
 import Heading from '@/app/utils/Heading'
 import React from 'react'
