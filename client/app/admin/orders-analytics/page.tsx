@@ -1,7 +1,6 @@
 "use client";
 import Heading from "@/app/utils/Heading";
 import DashboardHero from "@/app/components/Admin/DashboardHero";
-import AdminSidebar from "@/app/components/Admin/SideBar/AdminSidebar";
 import AdminProtected from "@/app/hooks/AdminProtected";
 import OrderAnalytics from "@/app/components/Admin/Analytics/OrderAnalytics";
 
@@ -15,15 +14,8 @@ const Page = () => {
                     description="ELearning is a platform for students to learn and get help from teachers"
                     keywords="Programming, MERN, Redux,AI/ML"
                 />
-                <div className="flex min-h-screen">
-                    <div className="1500px:w-1/6 w-1/5">
-                        <AdminSidebar />
-                    </div>
-                    <div className="w-[85%]">
-                        <DashboardHero isDashboard={true} />
-                        <OrderAnalytics />
-                    </div>
-                </div>
+                <DashboardHero isDashboard={false} />
+                <OrderAnalytics />
             </AdminProtected>
         </div>
     );

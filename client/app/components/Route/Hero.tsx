@@ -10,9 +10,14 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { type FC, useState } from "react"
 import { BiSearch } from "react-icons/bi"
+import { useGetHeroDataQuery } from "@/app/redux/features/layout/layoutApi"
 // import Loader from "../Loader/Loader"
 
 const Hero = () => {
+
+    const { data } = useGetHeroDataQuery("Banner", {})
+    // console.log(data);
+
 
     return (
         <>
@@ -22,7 +27,7 @@ const Hero = () => {
                         <div className="relative w-full max-w-md">
                             <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-teal-500 rounded-full filter blur-3xl opacity-70 animate-blob"></div>
                             <Image
-                                src={heroBanner}
+                                src={data?.layout?.banner?.image?.url}
                                 width={5000}
                                 height={5000}
                                 alt="Hero illustration"
@@ -33,10 +38,10 @@ const Hero = () => {
 
                     <div className="1000px:w-[60%] flex flex-col items-center 1000px:mt-[0px] text-center 1000px:text-left mt-[150px]">
                         <h1 className="dark:text-white text-[#000000c7] text-[40px] px-3 w-full 1000px:text-[60px] font-[600] font-Josefin pl-[105px] py-2 1000px:leading-[75px] 1500px:w-[80%] 1100px:w-[78%]">
-                            {/* {data?.layout?.banner?.title || "Improve Your Online Learning Experience Instantly"} */}
+                            {data?.layout?.banner?.title || "Improve Your Online Learning Experience Instantly"}
                         </h1>
                         <p className="dark:text-[#edfff4] text-[#000000ac] font-Josefin font-[600] text-[18px] 1500px:!w-[55%] 1100px:!w-[78%]">
-                            {/* {data?.layout?.banner?.subTitle || "Discover a world of knowledge at your fingertips. Join our community of learners and unlock your potential today."} */}
+                            {data?.layout?.banner?.subTitle || "Discover a world of knowledge at your fingertips. Join our community of learners and unlock your potential today."}
                         </p>
 
                         <br />

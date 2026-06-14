@@ -36,10 +36,13 @@ interface itemProps {
     setSelected: any;
 }
 
+import { usePathname } from "next/navigation";
+
 const Item: FC<itemProps> = ({ title, to, icon, selected, setSelected }) => {
+    const pathname = usePathname();
     return (
         <MenuItem
-            active={selected === title}
+            active={pathname === to}
             onClick={() => setSelected(title)}
             icon={icon}
         >
@@ -58,7 +61,30 @@ const AdminSidebar = () => {
     const { theme, setTheme } = useTheme();
     const { } = useLogoutQuery(undefined, { skip: !logout ? true : false });
 
+    const pathname = usePathname();
+
     useEffect(() => setMounted(true), []);
+
+    useEffect(() => {
+        if (mounted) {
+            const sidebarInner = document.querySelector(".pro-sidebar-inner");
+            if (sidebarInner) {
+                const savedScrollPosition = sessionStorage.getItem("sidebarScroll");
+                if (savedScrollPosition) {
+                    sidebarInner.scrollTop = parseInt(savedScrollPosition, 10);
+                }
+
+                const handleScroll = () => {
+                    sessionStorage.setItem("sidebarScroll", sidebarInner.scrollTop.toString());
+                };
+                sidebarInner.addEventListener("scroll", handleScroll);
+
+                return () => {
+                    sidebarInner.removeEventListener("scroll", handleScroll);
+                };
+            }
+        }
+    }, [mounted, pathname]);
 
     if (!mounted) {
         return null;

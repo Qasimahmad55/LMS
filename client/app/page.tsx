@@ -4,6 +4,7 @@ import { useState } from "react";
 import Heading from "./utils/Heading";
 import Header from "./components/Header";
 import Hero from "./components/Route/Hero";
+import Courses from "./components/Route/Courses";
 
 // export const metadata: Metadata = {
 //   title: "ELearning",
@@ -33,6 +34,7 @@ const Page = () => {
         setRoute={setRoute}
       />
       <Hero />
+      <Courses />
     </div>
   );
 };
