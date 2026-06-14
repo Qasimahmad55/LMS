@@ -20,7 +20,7 @@ const page = () => {
                         <AdminSidebar />
                     </div>
                     <div className='w-[85%]'>
-                        <DashBoardHero isDashboard={true} />
+                        <DashBoardHero isDashboard={false} />
                         <AllUsers />
                     </div>
                 </div>

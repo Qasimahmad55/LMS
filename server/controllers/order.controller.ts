@@ -85,10 +85,10 @@ export const createOrder = CatchAsyncHandler(async (req: Request, res: Response,
     }
 })
 //get all orders
-export const getAllOrders = CatchAsyncHandler(async (res: Response, next: NextFunction) => {
+export const getAllOrders = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     try {
         getAllOrdersService(res)
     } catch (error: any) {
-        return next(new ErrorHandler(error.messagge, 500))
+        return next(new ErrorHandler(error.message, 500))
     }
 })
