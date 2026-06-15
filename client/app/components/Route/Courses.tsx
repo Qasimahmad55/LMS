@@ -1,7 +1,7 @@
 "use client"
 import { useGetUsersAllCoursesQuery } from '@/app/redux/features/courses/coursesApi'
 import React, { useEffect, useState } from 'react'
-import CourseCard from '../Course/CourseCard'
+import CourseCard from '../Courses/CourseCard'
 
 type Props = {}
 
