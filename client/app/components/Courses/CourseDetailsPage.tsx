@@ -1,10 +1,12 @@
 import { useGetCourseDetailsQuery } from '@/app/redux/features/courses/coursesApi'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Loader from '../Loader/Loader'
 import Heading from '@/app/utils/Heading'
 import Header from '../Header'
 import Footer from '../Footer'
 import CourseDetails from './CourseDetails'
+import { useCreatePaymentIntentMutation, useGetStripePublishableKeyQuery } from '@/app/redux/features/orders/ordersApi'
+import { loadStripe } from '@stripe/stripe-js'
 
 type Props = {
     id: string
@@ -12,8 +14,32 @@ type Props = {
 
 const CourseDetailsPage = ({ id }: Props) => {
     const { data, isLoading } = useGetCourseDetailsQuery(id)
+    const { data: config } = useGetStripePublishableKeyQuery({})
+    const [createPaymentIntent, { data: paymentIntentData }] = useCreatePaymentIntentMutation()
+
+    const [stripePromise, setStripePromise] = useState<any>(null);
+    const [clientSecret, setClientSecret] = useState("");
+
     const [route, setRoute] = useState("Login")
     const [open, setOpen] = useState(false)
+
+    useEffect(() => {
+        if (config) {
+            const publishableKey = config?.publishableKey;
+            // initializes the Stripe.js SDK using your public Stripe publishable key
+            setStripePromise(loadStripe(publishableKey));
+        }
+        if (data) {
+            const amount = Math.round(data?.course?.price * 100);
+            createPaymentIntent(amount);
+        }
+    }, [config, data, createPaymentIntent])
+
+    useEffect(() => {
+        if (paymentIntentData) {
+            setClientSecret(paymentIntentData.client_secret);
+        }
+    }, [paymentIntentData]);
 
     return (
         <>
@@ -33,14 +59,15 @@ const CourseDetailsPage = ({ id }: Props) => {
                         setOpen={setOpen}
                         activeItem={1}
                     />
-                    {
-                        <CourseDetails
+                    {stripePromise && (
+                        < CourseDetails
                             setRoute={setRoute}
-                            // setOpen={setOpen}
+                            setOpen={setOpen}
                             data={data.course}
-                            // stripePromise={stripePromise}
-                            // clientSecret={clientSecret}
+                            stripePromise={stripePromise}
+                            clientSecret={clientSecret}
                         />
+                    )
                     }
                     <Footer />
                 </>

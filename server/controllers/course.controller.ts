@@ -132,7 +132,7 @@ export const getCourseByUser = CatchAsyncHandler(async (req: Request, res: Respo
         const userCourseList = req.user?.courses
         const courseId = req.params.id
 
-        const courseExists = userCourseList?.find((course: any) => course._id.toString() === courseId)
+        const courseExists = userCourseList?.find((course: any) => course.courseId === courseId)
         if (!courseExists) {
             return next(new ErrorHandler("You are not eligible to access this course", 404))
         }
@@ -289,7 +289,7 @@ export const addReview = CatchAsyncHandler(async (req: Request, res: Response, n
         const courseId = req.params.id
 
         //to check if course already exists
-        const courseExists = userCourseList?.some((course: any) => course._id.toString() === courseId.toString())
+        const courseExists = userCourseList?.some((course: any) => course.courseId === courseId)
 
         if (!courseExists) {
             return next(new ErrorHandler("You are not eligible to access this course", 400))

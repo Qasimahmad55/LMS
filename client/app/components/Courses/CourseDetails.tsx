@@ -10,29 +10,41 @@ import { VscVerifiedFilled } from 'react-icons/vsc';
 import { useSelector } from 'react-redux';
 import { format } from 'timeago.js';
 import CourseContentList from './CourseContentList';
+import { Elements } from '@stripe/react-stripe-js'
+import CheckOutForm from '../payment/CheckOutForm';
+import { useLoadUserQuery } from '@/app/redux/features/api/apiSlice';
 
 type Props = {
     data: any;
-    //   clientSecret: string;
-    //   stripePromise: any;
-    // setOpen: openAuthModel;
+    clientSecret: string;
+    stripePromise: any;
+    // setOpen: OpenAuthModel;
     setRoute: any;
 };
 
-const CourseDetails = ({ data }: Props) => {
+const CourseDetails = ({ data, setRoute, stripePromise, clientSecret }: Props) => {
+
+    const { data: userData, refetch } = useLoadUserQuery(undefined, {});
+
     const [open, setOpen] = useState(false);
     const { user } = useSelector((state: any) => state.auth)
     const discountPercentage = ((data.estimatedPrice - data.price) / data?.estimatedPrice) * 100
 
     const discountPercentagePrice = discountPercentage.toFixed(0)
-    const isPurchased = user & user?.courses?.find((item: any) => (
-        item._id === data._id
+    const isPurchased = user && user?.courses?.find((item: any) => (
+        item.courseId === data._id
     ))
 
     const handleOrder = (e: any) => {
-        console.log("gg");
+        if (user) {
+            setOpen(true);
+        } else {
+            setRoute("Login");
+            // OpenAuthModel(true);
+        }
+    };
 
-    }
+
     return (
         <>
             <div className="w-[90%] 800px:w-[90%] m-auto py-5">
@@ -78,7 +90,7 @@ const CourseDetails = ({ data }: Props) => {
                             <br />
                             <br />
                         </div>
-                        
+
                         {/* Each prerequisite */}
                         <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
                             What are the prerequisites for starting this course?
@@ -261,16 +273,16 @@ const CourseDetails = ({ data }: Props) => {
                                 />
                             </div>
                             <div className="w-full ">
-                                {/* 
-                wraps your payment form and connects it to Stripe using:
-                stripePromise: your initialized Stripe instance
-                clientSecret: links the form to a specific payment 
-                */}
-                                {/* {stripePromise && clientSecret && (
+
+                                wraps your payment form and connects it to Stripe using:
+                                stripePromise: your initialized Stripe instance
+                                clientSecret: links the form to a specific payment
+
+                                {stripePromise && clientSecret && (
                                     <Elements stripe={stripePromise} options={{ clientSecret }}>
                                         <CheckOutForm setOpen={setOpen} refetch={refetch} data={data} user={user} />
                                     </Elements>
-                                )} */}
+                                )}
                             </div>
                         </div>
                     </div>

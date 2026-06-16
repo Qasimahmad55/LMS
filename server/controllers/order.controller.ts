@@ -9,7 +9,9 @@ import path from "path";
 import ejs from 'ejs'
 import sendEmail from "../utils/sendMail";
 import notificationModel from "../models/notification.model";
-
+import Stripe from 'stripe'
+import { redis } from "../utils/redis";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "")
 
 //create order
 export const createOrder = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -17,12 +19,27 @@ export const createOrder = CatchAsyncHandler(async (req: Request, res: Response,
         const { courseId, payment_info } = req.body as IOrder
         const userId = req.user?._id.toString()
 
+        if (payment_info) {
+            if ("id" in payment_info) {
+                const paymentIntentId = (payment_info as any).id
+                const paymentIntent = await stripe.paymentIntents.retrieve(
+                    paymentIntentId
+                )
+
+                if (paymentIntent.status !== "succeeded") {
+                    return next(new ErrorHandler("Payment not authorized!", 400));
+                }
+            }
+
+
+        }
+
         if (!userId) {
             return next(new ErrorHandler("User not found", 404))
         }
         const user = await userModel.findById(userId)
 
-        const courseExistsInUser = user?.courses.some((course: any) => course._id.toString() === courseId)
+        const courseExistsInUser = user?.courses.some((course: any) => course.courseId === courseId)
 
         if (courseExistsInUser) {
             return next(new ErrorHandler("You have already purchased this course", 404))
@@ -65,7 +82,11 @@ export const createOrder = CatchAsyncHandler(async (req: Request, res: Response,
         }
 
         user?.courses.push({ courseId: course._id.toString() })
+
         await user?.save()
+
+        // Update user in Redis after successful save
+        await redis.set(userId, JSON.stringify(user));
 
         await notificationModel.create({
             userId,
@@ -73,9 +94,16 @@ export const createOrder = CatchAsyncHandler(async (req: Request, res: Response,
             message: `You have new Order from ${course?.name}`
         })
 
-        course.purchased ? course.purchased += 1 : course.purchased
+        const updatedCourse = await CourseModel.findByIdAndUpdate(
+            course._id,
+            { $inc: { purchased: 1 } },
+            { new: true }
+        )
 
-        await course.save()
+        // Update course in Redis cache
+        if (updatedCourse) {
+            await redis.set(courseId, JSON.stringify(updatedCourse))
+        }
 
         newOrder(data, res, next)
 
@@ -88,6 +116,35 @@ export const createOrder = CatchAsyncHandler(async (req: Request, res: Response,
 export const getAllOrders = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     try {
         getAllOrdersService(res)
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 500))
+    }
+})
+
+//send stripe publish key
+export const sendStripePublishKey = CatchAsyncHandler(async (req: Request, res: Response) => {
+    res.status(200).json({
+        publishableKey: process.env.STRIPE_PUBLISHABLE_KEY
+    })
+})
+//new payment
+export const newPayment = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const myPayment = await stripe.paymentIntents.create({
+            amount: req.body.amount,
+            currency: "USD",
+            metadata: {
+                companyName: "E-Learning"
+            },
+            automatic_payment_methods: {
+                enabled: true
+            }
+        })
+
+        res.status(201).json({
+            success: true,
+            client_secret: myPayment.client_secret
+        })
     } catch (error: any) {
         return next(new ErrorHandler(error.message, 500))
     }
