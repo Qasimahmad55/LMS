@@ -78,8 +78,7 @@ const CourseDetails = ({ data }: Props) => {
                             <br />
                             <br />
                         </div>
-                        <br />
-                        <br />
+                        
                         {/* Each prerequisite */}
                         <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
                             What are the prerequisites for starting this course?

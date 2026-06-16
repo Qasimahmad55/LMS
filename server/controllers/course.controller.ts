@@ -42,7 +42,7 @@ export const editCourse = CatchAsyncHandler(async (req: Request, res: Response, 
     try {
         const data = req.body
         const thumbnail = data.thumbnail
-        const courseId = req.params.id
+        const courseId = req.params.id as any
         const courseData = await CourseModel.findById(courseId) as any
 
         if (thumbnail && !thumbnail.startsWith("https")) {
@@ -67,6 +67,11 @@ export const editCourse = CatchAsyncHandler(async (req: Request, res: Response, 
             $set: data,
         },
             { new: true })
+
+        // Update the Redis cache with the new course data
+        if (course) {
+            await redis.set(courseId, JSON.stringify(course), "EX", 604800)
+        }
 
         res.status(200).json({
             success: true,

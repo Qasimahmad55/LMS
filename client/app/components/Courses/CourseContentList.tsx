@@ -77,7 +77,7 @@ const CourseContentList: FC<Props> = (props: Props) => {
                             </div>
                         </div>
                         <h5 className="text-black dark:text-white">
-                            {sectionVideoCount} Lessons ·
+                            {sectionVideoCount} Lessons ·{" "}
                             {sectionVideoLength < 60
                                 ? sectionVideoLength
                                 : sectionContentHours.toFixed(2)}
@@ -114,7 +114,7 @@ const CourseContentList: FC<Props> = (props: Props) => {
                                                 {item.videoLength > 60
                                                     ? contentLength.toFixed(2)
                                                     : item.videoLength}
-                                                {item.videoLength > 60 ? "hours" : "minutes"}
+                                                {item.videoLength > 60 ? " hours" : " minutes"}
                                             </h5>
                                         </div>
                                     );
