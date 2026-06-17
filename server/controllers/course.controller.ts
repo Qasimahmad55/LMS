@@ -189,7 +189,7 @@ export const addQuestion = CatchAsyncHandler(async (req: Request, res: Response,
             message: `You have a new question in ${courseContent.title}`
         })
 
-        await course?.save()
+        await course?.save({ validateBeforeSave: false })
         res.status(200).json({
             success: true,
             course
@@ -231,12 +231,14 @@ export const AddAnswer = CatchAsyncHandler(async (req: Request, res: Response, n
 
         const newAnswer: any = {
             user: req.user,
-            answer
+            answer,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
         }
         //add answer to course content 
         question?.questionReplies?.push(newAnswer)
 
-        await course?.save()
+        await course?.save({ validateBeforeSave: false })
 
         if (req.user?._id === question.user._id) {
             //create a notification
@@ -286,7 +288,7 @@ interface IAddReviewData {
 export const addReview = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userCourseList = req.user?.courses
-        const courseId = req.params.id
+        const courseId = req.params.id.toString()
 
         //to check if course already exists
         const courseExists = userCourseList?.some((course: any) => course.courseId === courseId)
@@ -297,12 +299,13 @@ export const addReview = CatchAsyncHandler(async (req: Request, res: Response, n
 
         const course = await CourseModel.findById(courseId)
 
-        const { review, rating } = req.body as IAddReviewData
+        const { review, rating, contentId } = req.body as IAddReviewData
 
         const reviewData: any = {
             user: req.user,
             comment: review,
-            rating
+            rating,
+            contentId
         }
 
         course?.reviews.push(reviewData)
@@ -316,13 +319,17 @@ export const addReview = CatchAsyncHandler(async (req: Request, res: Response, n
             course.ratings = avg / course.reviews.length
         }
 
-        await course?.save()
+        await course?.save({ validateBeforeSave: false })
 
-        const notification = {
+        await redis.set(courseId, JSON.stringify(course), "EX", 604800)
+
+        //create notification 
+
+        await notificationModel.create({
+            userId: req.user?._id.toString(),
             title: "New Review Recieved",
             message: `${req.user?.name} has given a review in ${course?.name}`
-        }
-        //create notification 
+        })
         res.status(200).json({
             success: true,
             course
@@ -336,7 +343,8 @@ export const addReview = CatchAsyncHandler(async (req: Request, res: Response, n
 interface IAddReviewData {
     comment: string,
     courseId: string,
-    reviewId: string
+    reviewId: string,
+    contentId: string,
 }
 
 export const addReplyToReview = CatchAsyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -355,7 +363,9 @@ export const addReplyToReview = CatchAsyncHandler(async (req: Request, res: Resp
 
         const replyData: any = {
             user: req.user,
-            comment
+            comment,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
         }
 
         if (!review.commentReplies) {
@@ -363,7 +373,9 @@ export const addReplyToReview = CatchAsyncHandler(async (req: Request, res: Resp
         }
 
         review.commentReplies?.push(replyData)
-        await course?.save()
+        await course?.save({ validateBeforeSave: false })
+
+        await redis.set(courseId, JSON.stringify(course), "EX", 604800)
 
         res.status(200).json({
             success: true,

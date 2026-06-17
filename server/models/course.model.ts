@@ -11,7 +11,8 @@ interface IReview extends Document {
     user: IUser,
     rating: number,
     comment: string,
-    commentReplies?: IComment[]
+    commentReplies?: IComment[],
+    contentId?: string;
 }
 
 interface ILink extends Document {
@@ -57,8 +58,9 @@ const reviewSchema = new Schema<IReview>({
         default: 0
     },
     comment: String,
-    commentReplies: [Object]
-})
+    commentReplies: [Object],
+    contentId: String,
+}, { timestamps: true })
 
 const linkSchema = new Schema<ILink>({
     title: String,
@@ -69,7 +71,7 @@ const commentSchema = new Schema<IComment>({
     user: Object,
     question: String,
     questionReplies: [Object]
-})
+}, { timestamps: true })
 
 const courseDataSchema = new Schema<ICourseData>({
     title: String,

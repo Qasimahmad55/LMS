@@ -47,9 +47,56 @@ export const courseApi = apiSlice.injectEndpoints({
                 credentials: "include" as const
             })
         }),
+        getCourseContent: builder.query({
+            query: (id) => ({
+                url: `get-course-content/${id}`,
+                method: "GET",
+                credentials: "include" as const
+            })
+        }),
+        addNewQuestion: builder.mutation({
+            query: ({ question, courseId, contentId }) => ({
+                url: "add-question",
+                method: "PUT",
+                body: {
+                    question, courseId, contentId
+                },
+                credentials: "include" as const
+            })
+        }),
+        addAnswerInQuestion: builder.mutation({
+            query: ({ answer, courseId, contentId, questionId }) => ({
+                url: "add-answer",
+                method: "PUT",
+                body: {
+                    answer, courseId, contentId, questionId
+                },
+                credentials: "include" as const
+            })
+        }),
+        addReviewInCourse: builder.mutation({
+            query: ({ review, rating, courseId, contentId }) => ({
+                url: `add-review/${courseId}`,
+                method: "PUT",
+                body: {
+                    review, rating, contentId
+                },
+                credentials: "include" as const
+            })
+        }),
+        addReplyInReview: builder.mutation({
+            query: ({ reviewId, comment, courseId }) => ({
+                url: `add-reply`,
+                method: "PUT",
+                body: {
+                    reviewId, comment, courseId
+                },
+                credentials: "include" as const
+            })
+        }),
 
 
     })
 })
 
-export const { useCreateCourseMutation, useGetAllCoursesQuery, useDeleteCourseMutation, useEditCourseMutation, useGetUsersAllCoursesQuery,useGetCourseDetailsQuery } = courseApi
+export const { useCreateCourseMutation, useGetAllCoursesQuery, useDeleteCourseMutation, useEditCourseMutation, useGetUsersAllCoursesQuery, useGetCourseDetailsQuery, useGetCourseContentQuery, useAddNewQuestionMutation, useAddAnswerInQuestionMutation, useAddReviewInCourseMutation, useAddReplyInReviewMutation } = courseApi

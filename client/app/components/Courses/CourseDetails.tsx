@@ -27,7 +27,9 @@ const CourseDetails = ({ data, setRoute, stripePromise, clientSecret }: Props) =
     const { data: userData, refetch } = useLoadUserQuery(undefined, {});
 
     const [open, setOpen] = useState(false);
-    const { user } = useSelector((state: any) => state.auth)
+    
+    const user = userData?.user
+
     const discountPercentage = ((data.estimatedPrice - data.price) / data?.estimatedPrice) * 100
 
     const discountPercentagePrice = discountPercentage.toFixed(0)
