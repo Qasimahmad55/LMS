@@ -1,10 +1,12 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SideBarProfile from './SideBarProfile'
 import { useLogoutQuery } from '@/app/redux/features/auth/authApi'
 import { signOut } from 'next-auth/react'
 import ProfileInfo from './ProfileInfo'
 import ChangePassword from './ChangePassword'
+import CourseCard from '../Courses/CourseCard'
+import { useGetAllCoursesQuery } from '@/app/redux/features/courses/coursesApi'
 
 type Props = {
     user: any
@@ -15,6 +17,9 @@ const Profile = ({ user }: Props) => {
     const [avatar, setAvatar] = useState("");
     const [active, setActive] = useState(1);
     const [logout, setLogout] = useState(false);
+    const [courses, setCourses] = useState([]);
+
+    const { data, isLoading } = useGetAllCoursesQuery(undefined, {})
 
     const { } = useLogoutQuery(undefined, {
         skip: !logout ? true : false
@@ -31,6 +36,27 @@ const Profile = ({ user }: Props) => {
             if (window.scrollY > 80) setScroll(true); else setScroll(false)
         })
     }
+    useEffect(() => {
+        if (data) {
+            // Deduplicate: track seen course IDs to avoid showing duplicates
+            const seenIds = new Set<string>();
+            const filteredCourses = user.courses
+                .filter((item: any) => {
+                    const id = (item.courseId || item.id || "").toString();
+                    if (seenIds.has(id)) return false;
+                    seenIds.add(id);
+                    return true;
+                })
+                .map((item: any) => {
+                    const id = (item.courseId || item.id || "").toString();
+                    return data.courses.find((course: any) =>
+                        course._id?.toString() === id || course.id?.toString() === id
+                    );
+                })
+                .filter((course: any) => course !== undefined);
+            setCourses(filteredCourses);
+        }
+    }, [data, user]);
 
     return (
         <div className="w-[85%] flex mx-auto">
@@ -56,7 +82,7 @@ const Profile = ({ user }: Props) => {
                     <ChangePassword />
                 </div>
             )}
-            {/* {active === 3 && (
+            {active === 3 && (
                 <div className="w-full pl-7 px-2 800px:px-10 800px:pl-8 mt-[80px]">
                     <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] 1500px:grid-cols-3 1500px:gap-[35px] mb-12 border-0">
                         {courses &&
@@ -70,7 +96,7 @@ const Profile = ({ user }: Props) => {
                         </h1>
                     )}
                 </div>
-            )} */}
+            )}
         </div>
     )
 }

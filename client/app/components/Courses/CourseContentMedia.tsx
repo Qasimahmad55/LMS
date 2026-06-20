@@ -438,7 +438,7 @@ const CourseContentMedia = ({
                                                             setReviewId(item._id);
                                                         }}
                                                     >
-                                                        AddReply
+                                                        Add Reply
                                                     </span>
                                                 )}
                                             {/* Review Reply */}

@@ -67,6 +67,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
         }
     }
 
+
     return (
         <div className='w-full relative' >
             <div className={
@@ -126,21 +127,37 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
                 {/* mobile sidebar */}
                 {openSidebar && (
                     <div
-                        className="fixed w-full h-screen top-0 left-0 z-99999 dark:bg-[unset] bg-[#00000024]"
+                        className="fixed w-full h-screen top-0 left-0 z-[99999] dark:bg-[unset] bg-[#00000024]"
                         onClick={handleClose}
                         id="screen"
                     >
-                        <div className="w-[70%] fixed z-999999999 h-screen bg-white dark:bg-slate-900 dark:bg-opacity-90 top-0 right-0">
+                        <div className="w-[70%] fixed z-[999999999] h-screen bg-white top-0 right-0 dark:bg-slate-900 dark:bg-opacity-90">
                             <NavItems activeItem={activeItem} isMobile={true} />
-                            <HiOutlineUserCircle
-                                size={25}
-                                className="cursor-pointer ml-5 my-2 text-black dark:text-white"
-                                onClick={() => setOpen(true)}
-                            />
+
+                            {userData ? (
+                                <Link href={"/profile"}>
+                                    <Image
+                                        src={userData.user.avatar ? userData.user.avatar.url : avatar}
+                                        alt=""
+                                        width={30}
+                                        height={30}
+                                        className="w-[30px] h-[30px] rounded-full cursor-pointer ml-[20px] "
+                                        style={{
+                                            border: activeItem === 5 ? "2px solid #37a39a" : "",
+                                        }}
+                                    />
+                                </Link>
+                            ) : (
+                                <HiOutlineUserCircle
+                                    size={25}
+                                    className="cursor-pointer ml-5 my-2 dark:text-white text-black"
+                                    onClick={() => setOpen(true)}
+                                />
+                            )}
                             <br />
                             <br />
                             <p className="text-[16px] px-2 pl-5 text-black dark:text-white">
-                                Copyright © {currentYear} ELearning
+                                {`Copyrigt ©️ ${currentYear} E-Learning`}
                             </p>
                         </div>
                     </div>

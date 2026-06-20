@@ -22,33 +22,44 @@ const DashboardHeader: FC<Props> = ({ open, setOpen }) => {
     });
     const [updateNotificationStatus, { isSuccess }] = useUpdateNotificationStatusMutation();
 
-    const [audio] = useState<any>(typeof window !== "undefined" && new Audio());
+    const [audio] = useState<any>(
+        typeof window !== "undefined"
+            ? new Audio(
+                "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+            )
+            : null
+    );
 
     const playNotificationSound = () => {
-        audio.play();
+        if (audio) {
+            audio.play().catch((err: any) => console.log("Audio error:", err));
+        }
     };
 
     useEffect(() => {
-        if (data) {
+        if (data && data.notification) {
             setNotifications(
-                data.notifications.filter((item: any) => item.status === "unread")
+                data.notification.filter((item: any) => item.status === "unread")
             );
         }
-        if (isSuccess) {
-            refetch();
-        }
-        audio.load();
-    }, [data, isSuccess, audio]);
+    }, [data]);
 
     useEffect(() => {
-        socketId.on("newNotification", () => {
+        const handleNewNotification = () => {
             refetch();
             playNotificationSound();
-        });
+        };
+
+        socketId.on("newNotification", handleNewNotification);
+
+        return () => {
+            socketId.off("newNotification", handleNewNotification);
+        };
     }, [refetch]);
 
     const handleNotificationStatusChange = async (id: string) => {
         await updateNotificationStatus(id);
+        refetch();
     };
 
     return (

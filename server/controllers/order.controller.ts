@@ -39,10 +39,10 @@ export const createOrder = CatchAsyncHandler(async (req: Request, res: Response,
         }
         const user = await userModel.findById(userId)
 
-        const courseExistsInUser = user?.courses.some((course: any) => course.courseId === courseId)
+        const courseExistsInUser = user?.courses.some((course: any) => course.courseId.toString() === courseId.toString())
 
         if (courseExistsInUser) {
-            return next(new ErrorHandler("You have already purchased this course", 404))
+            return next(new ErrorHandler("You have already purchased this course", 400))
         }
 
         const course = await CourseModel.findById(courseId)
