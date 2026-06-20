@@ -5,6 +5,10 @@ import { LinkAuthenticationElement, PaymentElement, useElements, useStripe } fro
 import { redirect } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
+import socketIO from 'socket.io-client'
+
+const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || ""
+const socketId = socketIO(ENDPOINT, { transports: ["websocket"] })
 
 type Props = {
     setOpen: any;
@@ -48,11 +52,11 @@ const CheckOutForm = ({ data, user, refetch }: Props) => {
     useEffect(() => {
         if (orderData) {
             refetch();
-            // socket.emit("notification", {
-            //     title: "New Order",
-            //     message: `You Have A New Order From ${data?.name}`,
-            //     userId: user?._id,
-            // });
+            socketId.emit("notification", {
+                title: "New Order",
+                message: `You Have A New Order From ${data?.name}`,
+                userId: user?._id,
+            });
             setLoadUser(true);
             redirect(`/course-access/${data._id}`);
         }
@@ -68,13 +72,6 @@ const CheckOutForm = ({ data, user, refetch }: Props) => {
         <form id="payment-form" onSubmit={handleSubmit}>
             <LinkAuthenticationElement
                 id="link-authentication-element"
-            // Access the email value like so:
-            // onChange={(event) => {
-            //  setEmail(event.value.email);
-            // }}
-            //
-            // Prefill the email field like so:
-            // options={{defaultValues: {email: 'foo@bar.com'}}}
             />
             <PaymentElement id="payment-element" />
             <button disabled={isLoading || !stripe || !elements} id="submit">

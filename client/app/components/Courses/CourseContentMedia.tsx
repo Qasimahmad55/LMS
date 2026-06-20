@@ -9,6 +9,10 @@ import { AiFillStar, AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineStar } fr
 import { BiMessage } from 'react-icons/bi';
 import { VscVerifiedFilled } from 'react-icons/vsc';
 import { format } from 'timeago.js';
+import socketIO from 'socket.io-client'
+
+const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || ""
+const socketId = socketIO(ENDPOINT, { transports: ["websocket"] })
 
 type Props = {
     data: any;
@@ -73,11 +77,11 @@ const CourseContentMedia = ({
             setQuestion("");
             refetch();
             toast.success("Questiton Added SuccessFully!");
-            // socket.emit("notification", {
-            //     title: "New Question Recived!",
-            //     message: `You Have A New Questiton In ${data[activeVideo].title}`,
-            //     userId: user?._id,
-            // });
+            socketId.emit("notification", {
+                title: "New Question Recived!",
+                message: `You Have A New Questiton In ${data[activeVideo].title}`,
+                userId: user?._id,
+            });
         }
         if (error) {
             if ("data" in error) {
@@ -91,11 +95,11 @@ const CourseContentMedia = ({
             refetch();
             toast.success("Answer Added Successfully!");
             if (user.role !== "admin") {
-                // socket.emit("notification", {
-                //     title: "New Reply Recived!",
-                //     message: `You Have A New Questiton Reply In  ${data[activeVideo].title}`,
-                //     userId: user?._id,
-                // });
+                socketId.emit("notification", {
+                    title: "New Reply Recived!",
+                    message: `You Have A New Questiton Reply In  ${data[activeVideo].title}`,
+                    userId: user?._id,
+                });
             }
         }
         if (answerError) {
@@ -110,11 +114,11 @@ const CourseContentMedia = ({
             setRating(1);
             courseRefetch();
             toast.success("Review Added SuccessFully!");
-            // socket.emit("notification", {
-            //     title: "A New FeedBack Recived!",
-            //     message: `You Have A New Feedback In ${data[activeVideo].title}`,
-            //     userId: user?._id,
-            // });
+            socketId.emit("notification", {
+                title: "A New FeedBack Recived!",
+                message: `You Have A New Feedback In ${data[activeVideo].title}`,
+                userId: user?._id,
+            });
         }
         if (reviewError) {
             if ("data" in reviewError) {

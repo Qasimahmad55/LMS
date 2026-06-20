@@ -10,6 +10,12 @@ import { Providers } from './Provider'
 import { SessionProvider } from 'next-auth/react'
 import Loader from './components/Loader/Loader';
 import { useLoadUserQuery } from './redux/features/api/apiSlice';
+import socketIO from 'socket.io-client'
+
+const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || ""
+const socketId = socketIO(ENDPOINT, { transports: ["websocket"] })
+
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -64,6 +70,8 @@ const Custom: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [shouldLoadUser, setShouldLoadUser] = useState<boolean | null>(null)
 
   useEffect(() => {
+    socketId.on("connection",()=>{})
+
     setShouldLoadUser(localStorage.getItem("lms-authenticated") === "true")
   }, [])
 
@@ -74,6 +82,7 @@ const Custom: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   if (shouldLoadUser === null) {
     return <>{children}</>
   }
+
 
   return (
     <>
