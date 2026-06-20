@@ -4,7 +4,7 @@ import CoursePlayer from '@/app/utils/CoursePlayer';
 import Ratings from '@/app/utils/Ratings';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoCheckmarkDoneOutline, IoCloseOutline } from 'react-icons/io5';
 import { VscVerifiedFilled } from 'react-icons/vsc';
 import { useSelector } from 'react-redux';
@@ -18,17 +18,22 @@ type Props = {
     data: any;
     clientSecret: string;
     stripePromise: any;
-    // setOpen: OpenAuthModel;
+    setOpen: any;
     setRoute: any;
 };
 
-const CourseDetails = ({ data, setRoute, stripePromise, clientSecret }: Props) => {
+const CourseDetails = ({ data, setRoute, stripePromise, clientSecret, setOpen: OpenAuthModel }: Props) => {
 
     const { data: userData, refetch } = useLoadUserQuery(undefined, {});
 
     const [open, setOpen] = useState(false);
-    
-    const user = userData?.user
+
+    const [user, setUser] = useState<any>();
+    useEffect(() => {
+        setUser(userData?.user);
+    }, [userData]);
+
+    // const user = userData?.user
 
     const discountPercentage = ((data.estimatedPrice - data.price) / data?.estimatedPrice) * 100
 
@@ -42,7 +47,7 @@ const CourseDetails = ({ data, setRoute, stripePromise, clientSecret }: Props) =
             setOpen(true);
         } else {
             setRoute("Login");
-            // OpenAuthModel(true);
+            OpenAuthModel(true);
         }
     };
 
