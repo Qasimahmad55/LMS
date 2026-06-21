@@ -3,7 +3,8 @@ import { Modal, Box } from '@mui/material'
 
 type ModalComponentProps = {
     setOpen: (open: boolean) => void,
-    setRoute?: (route: string) => void
+    setRoute?: (route: string) => void,
+    refetch?: any
 }
 
 type Props = {

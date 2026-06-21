@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 import { signIn } from 'next-auth/react'
 
 type Props = {
-    setRoute: (route: string) => void,
+    setRoute?: (route: string) => void,
     setOpen: (open: boolean) => void,
     refetch?: any
 }
@@ -143,7 +143,7 @@ const Login: FC<Props> = ({ setRoute, setOpen, refetch }) => {
                     Not have any account?{" "}
                     <span
                         className="text-[#2190ff] pl-1 cursor-pointer"
-                        onClick={() => setRoute("Sign-Up")}
+                        onClick={() => setRoute?.("Sign-Up")}
                     >
                         Sign up
                     </span>

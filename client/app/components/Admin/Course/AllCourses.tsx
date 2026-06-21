@@ -115,8 +115,8 @@ const AllCourses = (props: Props) => {
                 <Box className="w-full" sx={{ maxWidth: '100%', overflow: 'hidden' }}>
                     <Box
                         className="bg-white dark:bg-[#111C43] shadow-md rounded-[10px] overflow-hidden border border-gray-200 dark:border-slate-800"
-                        height="80vh"
                         sx={{
+                            height: "80vh",
                             "& .MuiDataGrid-root": {
                                 border: "none",
                                 outline: "none",

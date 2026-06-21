@@ -8,7 +8,7 @@ import { useRegisterMutation } from '../../redux/features/auth/authApi'
 import toast from 'react-hot-toast'
 
 type Props = {
-    setRoute: (route: string) => void
+    setRoute?: (route: string) => void
 }
 
 const schema = Yup.object().shape({
@@ -25,7 +25,7 @@ const Signup: FC<Props> = ({ setRoute }) => {
         if (isSuccess) {
             const message = data?.message || "Registeration successfull"
             toast.success(message)
-            setRoute("Verification")
+            setRoute?.("Verification")
         }
         if (error) {
             if ("data" in error) {
@@ -165,7 +165,7 @@ const Signup: FC<Props> = ({ setRoute }) => {
                     Already have an account?{" "}
                     <span
                         className="text-[#2190ff] pl-1 cursor-pointer"
-                        onClick={() => setRoute("Login")}
+                        onClick={() => setRoute?.("Login")}
                     >
                         Sign in
                     </span>

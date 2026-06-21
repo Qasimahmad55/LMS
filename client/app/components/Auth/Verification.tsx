@@ -7,7 +7,7 @@ import { VscWorkspaceTrusted } from 'react-icons/vsc'
 import { useSelector } from 'react-redux'
 
 type Props = {
-    setRoute: (route: string) => void
+    setRoute?: (route: string) => void
 }
 
 type VerifyNumber = {
@@ -26,7 +26,7 @@ const Verification: FC<Props> = ({ setRoute }) => {
     useEffect(() => {
         if (isSuccess) {
             toast.success("Account Activated Successfully!");
-            setRoute("Login");
+            setRoute?.("Login");
         }
 
         if (error) {
@@ -118,7 +118,7 @@ const Verification: FC<Props> = ({ setRoute }) => {
                 Go back to sign in?{" "}
                 <span
                     className="text-[#2190ff] pl-1 cursor-pointer"
-                    onClick={() => setRoute("Login")}
+                    onClick={() => setRoute?.("Login")}
                 >
                     Sign in
                 </span>
