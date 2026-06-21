@@ -16,7 +16,7 @@ export const app = express()
 app.use(express.json({ limit: "50mb" }))
 app.use(cookieParser())
 app.use(cors({
-    origin: ['https://lms-client-seven-navy.vercel.app'],
+    origin: ['http://localhost:3000', 'https://lms-client-seven-navy.vercel.app'],
     credentials: true
 }))
 
