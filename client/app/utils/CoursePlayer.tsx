@@ -14,7 +14,7 @@ const CoursePlayer: FC<Props> = ({ videoUrl }: Props) => {
     })
 
     useEffect(() => {
-        axios.post("http://localhost:8000/api/v1/getVdoCipherOTP", {
+        axios.post("https://lms-api-rouge-alpha.vercel.app/api/v1/getVdoCipherOTP", {
             videoId: videoUrl,
         }).then((res) => {
             setVideoData(res.data)
