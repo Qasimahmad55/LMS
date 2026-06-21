@@ -52,10 +52,14 @@ const Item: FC<itemProps> = ({ title, to, icon, selected, setSelected }) => {
     );
 };
 
-const AdminSidebar = () => {
+interface AdminSidebarProps {
+    isCollapsed: boolean;
+    setIsCollapsed: (value: boolean) => void;
+}
+
+const AdminSidebar: FC<AdminSidebarProps> = ({ isCollapsed, setIsCollapsed }) => {
     const { user } = useSelector((state: any) => state.auth);
     const [logout, setlogout] = useState(false);
-    const [isCollapsed, setIsCollapsed] = useState(false);
     const [selected, setSelected] = useState("Dashboard");
     const [mounted, setMounted] = useState(false);
     const { theme, setTheme } = useTheme();
@@ -132,7 +136,6 @@ const AdminSidebar = () => {
                     left: 0,
                     height: "100vh",
                     zIndex: 99999999999999,
-                    width: isCollapsed ? "0vh" : "30vh",
                 }}
             >
                 <Menu iconShape="square">

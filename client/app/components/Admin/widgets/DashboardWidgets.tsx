@@ -6,6 +6,7 @@ import { PiUsersFourLight } from 'react-icons/pi'
 import { Box, CircularProgress } from '@mui/material'
 import AllInvoices from '../Order/AllInvoices'
 import { useGetOrdersAnalyticsQuery, useGetUsersAnalyticsQuery } from '@/app/redux/features/analytics/analyticsApi'
+import Loader from '../../Loader/Loader'
 type Props = {
     open: boolean,
     value?: number
@@ -97,82 +98,88 @@ const DashboardWidgets = ({ open }: Props) => {
     }, [isLoading, ordersLoading, data, ordersData]);
 
     return (
-        <div className="mt-[30px] min-h-screen">
-            <div className="grid 800px:grid-cols-[75%,25%]">
-                <div className=" pt-[10px]  800px:p-7 ">
-                    <UserAnalytics isDashboard={true} />
-                </div>
+        <>
+            {isLoading ? (
+                <Loader />
+            ) : (
+                <div className="min-h-screen px-4 md:px-8 pb-8 flex flex-col gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="lg:col-span-2 w-full h-full">
+                            <UserAnalytics isDashboard={true} />
+                        </div>
 
-                <div className=" pt-[20px] 800px:pt-[40px] p-[5px] 800px:block flex items-center justify-between">
-                    <div className="w-full dark:bg-[#111C43] rounded-sm shadow my-10 mr-[10px] 800px:my-8">
-                        <div className="flex items-center p-5 justify-between">
-                            <div className="">
-                                <BiBorderLeft className="dark:text-[#45CBA0] text-[#000] text-[30px]" />
-                                <h5 className="pt-2 font-Poppins dark:text-[#fff] text-black text-[20px]">
-                                    {ordersComparePercentage?.currentMonth}
-                                </h5>
-                                <h5 className="py-2 font-Poppins dark:text-[#45CBA0] text-black text-[20px] font-[400]">
-                                    Sales Obtained
-                                </h5>
+                        <div className="lg:col-span-1 flex flex-col gap-6">
+                            <div className="w-full h-full bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 transition-all hover:shadow-md flex flex-col justify-center">
+                                <div className="flex items-center p-5 justify-between">
+                                    <div className="">
+                                        <BiBorderLeft className="dark:text-[#45CBA0] text-[#000] text-[30px]" />
+                                        <h5 className="pt-2 font-Poppins dark:text-[#fff] text-black text-[24px] font-bold">
+                                            {ordersComparePercentage?.currentMonth}
+                                        </h5>
+                                        <h5 className="py-2 font-Poppins dark:text-blue-400 text-slate-500 text-[16px] font-[500]">
+                                            Sales Obtained
+                                        </h5>
+                                    </div>
+                                    <div>
+                                        <CircularProgressWithLabel
+                                            value={ordersComparePercentage?.percentChange > 0 ? 100 : 0}
+                                            open={open}
+                                        />
+                                        <h5 className={`text-center pt-4 font-semibold ${ordersComparePercentage?.percentChange > 0 ? "text-green-500" : "text-red-500"}`}>
+                                            {ordersComparePercentage?.percentChange > 0
+                                                ? "+" + ordersComparePercentage?.percentChange.toFixed(2)
+                                                : "-" +
+                                                ordersComparePercentage?.percentChange.toFixed(2)}{" "}
+                                            %
+                                        </h5>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <CircularProgressWithLabel
-                                    value={ordersComparePercentage?.percentChange > 0 ? 100 : 0}
-                                    open={open}
-                                />
-                                <h5 className="text-center pt-4">
-                                    {ordersComparePercentage?.percentChange > 0
-                                        ? "+" + ordersComparePercentage?.percentChange.toFixed(2)
-                                        : "-" +
-                                        ordersComparePercentage?.percentChange.toFixed(2)}{" "}
-                                    %
-                                </h5>
+
+                            <div className="w-full h-full bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 transition-all hover:shadow-md flex flex-col justify-center">
+                                <div className="flex items-center p-5 justify-between">
+                                    <div className="">
+                                        <PiUsersFourLight className="dark:text-[#45CBA0] text-[#000] text-[30px]" />
+                                        <h5 className="pt-2 font-Poppins dark:text-[#fff] text-black text-[24px] font-bold">
+                                            {userComparePercentage?.currentMonth}
+                                        </h5>
+                                        <h5 className="py-2 font-Poppins dark:text-blue-400 text-slate-500 text-[16px] font-[500]">
+                                            New Users
+                                        </h5>
+                                    </div>
+                                    <div>
+                                        <CircularProgressWithLabel
+                                            value={userComparePercentage?.percentChange > 0 ? 100 : 0}
+                                            open={open}
+                                        />
+                                        <h5 className={`text-center pt-4 font-semibold ${userComparePercentage?.percentChange > 0 ? "text-green-500" : "text-red-500"}`}>
+                                            {userComparePercentage?.percentChange > 0
+                                                ? "+" + userComparePercentage?.percentChange.toFixed(2)
+                                                : "-" +
+                                                userComparePercentage?.percentChange.toFixed(2)}{" "}
+                                            %
+                                        </h5>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="w-full dark:bg-[#111C43] rounded-sm shadow 800px:my-8 my-10">
-                        <div className="flex items-center p-5 justify-between">
-                            <div className="">
-                                <PiUsersFourLight className="dark:text-[#45CBA0] text-[#000] text-[30px]" />
-                                <h5 className="pt-2 font-Poppins dark:text-[#fff] text-black text-[20px]">
-                                    {userComparePercentage?.currentMonth}
-                                </h5>
-                                <h5 className="py-2 font-Poppins dark:text-[#45CBA0] text-black text-[20px] font-[400]">
-                                    New Users
-                                </h5>
-                            </div>
-                            <div>
-                                <CircularProgressWithLabel
-                                    value={userComparePercentage?.percentChange > 0 ? 100 : 0}
-                                    open={open}
-                                />
-                                <h5 className="text-center pt-4">
-                                    {userComparePercentage?.percentChange > 0
-                                        ? "+" + userComparePercentage?.percentChange.toFixed(2)
-                                        : "-" +
-                                        userComparePercentage?.percentChange.toFixed(2)}{" "}
-                                    %
-                                </h5>
-                            </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="lg:col-span-2 bg-white dark:bg-slate-800 w-full min-h-[40vh] shadow-sm border border-gray-100 dark:border-slate-700 rounded-xl p-4">
+                            <OrderAnalytics isDashboard={true} />
+                        </div>
+                        <div className="lg:col-span-1 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6">
+                            <h5 className="dark:text-[#fff] text-black text-[20px] font-[400] font-Poppins pb-3">
+                                Recent Transactions
+                            </h5>
+                            <AllInvoices isDashboard={true} />
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
+        </>
+    );
+};
 
-            <div className="grid 800px:grid-cols-[65%,35%] mt-[-20px]">
-                <div className="dark:bg-[#111c43] w-[95%] 800px:w-[94%] mt-[0px]  h-[30vh] 800px:h-[40vh] shadow-sm m-auto ">
-                    <OrderAnalytics isDashboard={true} />
-                </div>
-                <div className="p-5">
-                    <h5 className="dark:text-[#fff] text-black text-[20px] font-[400] font-Poppins pb-3">
-                        Recent Transactions
-                    </h5>
-                    <AllInvoices isDashboard={true} />
-                </div>
-            </div>
-        </div>
-    )
-}
-
-export default DashboardWidgets
+export default DashboardWidgets;

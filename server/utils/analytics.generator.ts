@@ -16,7 +16,7 @@ export async function generateLast12MonthsData<T extends Document>(model: Model<
 
         const startDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() - 28)
 
-        const monthYear = endDate.toLocaleString('default', { day: "numeric", month: "short", year: "numeric" })
+        const monthYear = endDate.toLocaleString('default', { month: "short", year: "numeric" })
 
         const count = await model.countDocuments({
             createdAt: {

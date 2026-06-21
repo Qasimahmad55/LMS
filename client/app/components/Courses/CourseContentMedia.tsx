@@ -42,18 +42,18 @@ const CourseContentMedia = ({
     const [reply, setReply] = useState("");
     const [reviewId, setReviewId] = useState("");
 
-    const [addNewQuestion, { isSuccess: questionSuccess, error, isLoading: questionCreationLoading }] = useAddNewQuestionMutation()
+    const [addNewQuestion, { isLoading: questionCreationLoading }] = useAddNewQuestionMutation();
 
-    const [addAnswerInQuestion, { isSuccess: answerSuccess, error: answerError, isLoading: answerCreationLoading, }] = useAddAnswerInQuestionMutation()
+    const [addAnswerInQuestion, { isLoading: answerCreationLoading }] = useAddAnswerInQuestionMutation();
 
-    const [addReviewInCourse, { isLoading: reviewCreationLoading, isSuccess: reviewSuccess, error: reviewError }] = useAddReviewInCourseMutation({});
+    const [addReviewInCourse, { isLoading: reviewCreationLoading }] = useAddReviewInCourseMutation();
 
     const { data: courseData, refetch: courseRefetch } = useGetCourseDetailsQuery(id,
         { refetchOnMountOrArgChange: true, }
     );
     const course = courseData?.course;
 
-    const [addReplyInReview, { isSuccess: replySuccess, isLoading: replyCreationLoading, error: replyError }] = useAddReplyInReviewMutation({});
+    const [addReplyInReview, { isLoading: replyCreationLoading }] = useAddReplyInReviewMutation();
 
     const isReviewsExist = course?.reviews?.find(
         (item: any) => item.user._id === user._id && item.contentId === data[activeVideo]._id
@@ -61,99 +61,31 @@ const CourseContentMedia = ({
 
     const handleQuestion = () => {
         if (question.length === 0) {
-            toast.error("Question can`t be Empty!");
+            toast.error("Question can't be empty!");
         } else {
             addNewQuestion({
                 question,
                 courseId: id,
                 contentId: data[activeVideo]._id,
-            });
-        }
-    }
-
-    useEffect(() => {
-        //Question Response
-        if (questionSuccess) {
-            setQuestion("");
-            refetch();
-            toast.success("Questiton Added SuccessFully!");
-            socketId.emit("notification", {
-                title: "New Question Recived!",
-                message: `You Have A New Questiton In ${data[activeVideo].title}`,
-                userId: user?._id,
-            });
-        }
-        if (error) {
-            if ("data" in error) {
-                const errorMessage = error as any;
-                toast.error(errorMessage.data.message);
-            }
-        }
-        // Answer Response
-        if (answerSuccess) {
-            setAnswer("");
-            refetch();
-            toast.success("Answer Added Successfully!");
-            if (user.role !== "admin") {
-                socketId.emit("notification", {
-                    title: "New Reply Recived!",
-                    message: `You Have A New Questiton Reply In  ${data[activeVideo].title}`,
-                    userId: user?._id,
+            })
+                .unwrap()
+                .then(() => {
+                    setQuestion("");
+                    refetch();
+                    toast.success("Question Added Successfully!");
+                    socketId.emit("notification", {
+                        title: "New Question Received!",
+                        message: `You have a new question in ${data[activeVideo].title}`,
+                        userId: user?._id,
+                    });
+                })
+                .catch((error: any) => {
+                    if (error?.data?.message) {
+                        toast.error(error.data.message);
+                    }
                 });
-            }
         }
-        if (answerError) {
-            if ("data" in answerError) {
-                const errorMessage = answerError as any;
-                toast.error(errorMessage.data.message);
-            }
-        }
-        // Review Response
-        if (reviewSuccess) {
-            setReview("");
-            setRating(1);
-            courseRefetch();
-            toast.success("Review Added SuccessFully!");
-            socketId.emit("notification", {
-                title: "A New FeedBack Recived!",
-                message: `You Have A New Feedback In ${data[activeVideo].title}`,
-                userId: user?._id,
-            });
-        }
-        if (reviewError) {
-            if ("data" in reviewError) {
-                const errorMessage = reviewError as any;
-                toast.error(errorMessage.data.message);
-            }
-        }
-        //reply response
-        if (replySuccess) {
-            setReply("");
-            courseRefetch();
-            toast.success("Reply Added SuccessFully!");
-        }
-        if (replyError) {
-            if ("data" in replyError) {
-                const errorMessage = replyError as any;
-                toast.error(errorMessage.data.message);
-            }
-        }
-    }, [
-        questionSuccess,
-        error,
-        answerSuccess,
-        answerError,
-        reviewSuccess,
-        reviewError,
-        replyError,
-        replySuccess,
-        data,
-        user._id,
-        user.role,
-        refetch,
-        activeVideo,
-        courseRefetch,
-    ]);
+    };
 
     const handleAnswerSubmit = () => {
         addAnswerInQuestion({
@@ -161,26 +93,72 @@ const CourseContentMedia = ({
             courseId: id,
             contentId: data[activeVideo]._id,
             questionId: questionId,
-        });
+        })
+            .unwrap()
+            .then(() => {
+                setAnswer("");
+                refetch();
+                toast.success("Answer Added Successfully!");
+                if (user.role !== "admin") {
+                    socketId.emit("notification", {
+                        title: "New Reply Received!",
+                        message: `You have a new question reply in ${data[activeVideo].title}`,
+                        userId: user?._id,
+                    });
+                }
+            })
+            .catch((error: any) => {
+                if (error?.data?.message) {
+                    toast.error(error.data.message);
+                }
+            });
     };
 
     const handleReviewSubmit = () => {
-        if (review.length == 0) {
-            toast.error("Review Can`t be Empty!");
+        if (review.length === 0) {
+            toast.error("Review can't be empty!");
         } else {
-            addReviewInCourse({ rating, review, courseId: id, contentId: data[activeVideo]._id });
+            addReviewInCourse({ rating, review, courseId: id, contentId: data[activeVideo]._id })
+                .unwrap()
+                .then(() => {
+                    setReview("");
+                    setRating(1);
+                    courseRefetch();
+                    toast.success("Review Added Successfully!");
+                    socketId.emit("notification", {
+                        title: "New Feedback Received!",
+                        message: `You have new feedback in ${data[activeVideo].title}`,
+                        userId: user?._id,
+                    });
+                })
+                .catch((error: any) => {
+                    if (error?.data?.message) {
+                        toast.error(error.data.message);
+                    }
+                });
         }
-    }
+    };
 
     const handleReviewReplySubmit = () => {
         if (!replyCreationLoading) {
             if (reply === "") {
-                toast.error("Reply can`t be empty!");
+                toast.error("Reply can't be empty!");
             } else {
-                addReplyInReview({ comment: reply, courseId: id, reviewId });
+                addReplyInReview({ comment: reply, courseId: id, reviewId })
+                    .unwrap()
+                    .then(() => {
+                        setReply("");
+                        courseRefetch();
+                        toast.success("Reply Added Successfully!");
+                    })
+                    .catch((error: any) => {
+                        if (error?.data?.message) {
+                            toast.error(error.data.message);
+                        }
+                    });
             }
         }
-    }
+    };
 
 
     return (
@@ -288,7 +266,7 @@ const CourseContentMedia = ({
                             onChange={(e) => setQuestion(e.target.value)}
                             className="outline-none bg-transparent ml-3 border dark:text-white text-black border-[#0000001d] dark:border-[#ffffff57] 800px:w-full p-2 rounded w-[90%] 800px:text-[18px] font-Poppins"
                             cols={4}
-                            rows={20}
+                            rows={5}
                             placeholder="Write Your Question..."
                         ></textarea>
                     </div>

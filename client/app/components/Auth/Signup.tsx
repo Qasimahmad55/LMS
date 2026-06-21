@@ -145,17 +145,21 @@ const Signup: FC<Props> = ({ setRoute }) => {
                 <h5 className="text-center pt-4 font-Poppins text-[14px] text-black dark:text-white">
                     Or join with
                 </h5>
-                <div className="flex items-center justify-center mt-2">
-                    <FcGoogle
-                        size={30}
-                        className="cursor-pointer mr-2"
-                    // onClick={() => signIn("google")}
-                    />
-                    <AiFillGithub
-                        size={30}
-                        className="cursor-pointer ml-2"
-                    // onClick={() => signIn("github")}
-                    />
+                <div className="flex items-center justify-center my-3 gap-4">
+                    <div 
+                        className="flex items-center justify-center py-2 px-6 rounded-lg border border-gray-300 dark:border-slate-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+                        // onClick={() => signIn("google")}
+                    >
+                        <FcGoogle size={24} className="mr-2" />
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Google</span>
+                    </div>
+                    <div 
+                        className="flex items-center justify-center py-2 px-6 rounded-lg border border-gray-300 dark:border-slate-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+                        // onClick={() => signIn("github")}
+                    >
+                        <AiFillGithub size={24} className="mr-2 text-black dark:text-white" />
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">GitHub</span>
+                    </div>
                 </div>
                 <h5 className="text-center pt-4 font-Poppins text-[14px]">
                     Already have an account?{" "}

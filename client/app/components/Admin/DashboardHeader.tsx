@@ -63,7 +63,7 @@ const DashboardHeader: FC<Props> = ({ open, setOpen }) => {
     };
 
     return (
-        <div className="w-full flex items-center justify-end p-6 fixed top-5 right-0 z-[9999999]">
+        <div className="w-full flex items-center justify-end p-4 md:p-6 relative z-[9999]">
             <ThemeSwitcher />
             <div
                 className="relative cursor-pointer m-2"
@@ -75,30 +75,30 @@ const DashboardHeader: FC<Props> = ({ open, setOpen }) => {
                 </span>
             </div>
             {open && (
-                <div className="w-[350px] h-[60vh] overflow-y-scroll py-3 px-2 border border-[#ffffff0c] dark:bg-[#111C43] bg-white shadow-xl absolute top-16 z-[1000000000] rounded">
-                    <h5 className="text-center text-[20px] font-Poppins text-black dark:text-white p-3">
+                <div className="w-[350px] max-h-[60vh] overflow-y-auto py-3 px-2 border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl rounded-xl absolute top-[70px] right-6 z-[10000] backdrop-blur-md transition-all duration-300">
+                    <h5 className="text-center text-[20px] font-semibold font-Poppins text-black dark:text-white p-3 border-b border-gray-100 dark:border-slate-800 mb-2">
                         Notifications
                     </h5>
 
                     {notifications &&
                         notifications.map((item: any, index: number) => (
                             <div
-                                className="dark:bg-[#2d3a4e] bg-[#00000013] font-Poppins border-b dark:border-b-[#ffffff47] border-b-[#0000000f]"
+                                className="dark:bg-slate-800/50 bg-gray-50/50 font-Poppins border border-gray-100 dark:border-slate-700/50 rounded-lg mb-2 p-3 transition-colors hover:bg-gray-100 dark:hover:bg-slate-800"
                                 key={index}
                             >
-                                <div className="w-full flex items-center justify-between p-2">
-                                    <p className="text-black dark:text-white">{item.title}</p>
+                                <div className="w-full flex items-center justify-between pb-2">
+                                    <p className="text-black dark:text-white font-medium">{item.title}</p>
                                     <p
-                                        className="text-black dark:text-white cursor-pointer"
+                                        className="text-blue-600 dark:text-blue-400 cursor-pointer text-sm hover:underline"
                                         onClick={() => handleNotificationStatusChange(item._id)}
                                     >
                                         Mark as read
                                     </p>
                                 </div>
-                                <p className="px-2 text-black dark:text-white">
+                                <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                                     {item.message}
                                 </p>
-                                <p className="p-2 text-black dark:text-white text-[14px]">
+                                <p className="text-gray-400 dark:text-gray-500 text-[12px] mt-2 font-medium">
                                     {format(item.createdAt)}
                                 </p>
                             </div>

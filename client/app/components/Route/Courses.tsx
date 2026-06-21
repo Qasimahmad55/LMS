@@ -17,16 +17,18 @@ const Courses = (props: Props) => {
     }, [data, refetch]);
 
     return (
-        <div>
-            <div className={`w-[90%] 800px:w-[80%] m-auto`}>
-                <h1 className="text-center font-Poppins text-[25px] leading-[35px] sm:text-3xl lg:text-4xl dark:text-white 800px:!leading-[60px] text-[#000] font-[700] tracking-tight">
-                    Expand Your Career <span className="text-gradient">Opportunity</span>
+        <div className="w-full pt-16 md:pt-24 pb-8 md:pb-12 bg-gray-50/50 dark:bg-slate-900/30">
+            <div className={`w-[90%] md:w-[85%] lg:w-[80%] mx-auto`}>
+                <h1 className="text-center font-Poppins text-[32px] sm:text-4xl lg:text-5xl dark:text-white text-slate-900 font-bold tracking-tight mb-4 leading-tight">
+                    Expand Your Career <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">Opportunity</span>
                     <br />
-                    Opportunity With Our Courses
+                    With Our Courses
                 </h1>
-                <br />
-                <br />
-                <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] 1500px:grid-cols-4 1500px:gap-[35px] mb-12 border-0">
+                <p className="text-center text-gray-600 dark:text-gray-400 font-Poppins mb-12 max-w-2xl mx-auto">
+                    Choose from our wide range of premium courses and start building your future today.
+                </p>
+                
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-12">
                     {courses &&
                         courses.map((item: any, index: number) => (
                             <CourseCard item={item} key={index} />

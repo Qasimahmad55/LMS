@@ -57,35 +57,37 @@ const reviews = [
 
 const Reviews = () => {
     return (
-        <div className="w-[90%] 800px:w-[85%] m-auto">
-            <div className="w-full 800px:flex items-center gap-10">
+        <div className="w-[90%] md:w-[85%] mx-auto pt-8 md:pt-12 pb-16 md:pb-24">
+            <div className="w-full flex flex-col md:flex-row items-center gap-12 md:gap-16">
                 {/* Left Side */}
-                <div className="w-full 800px:w-[50%]">
-                    <Image
-                        src={bussinessImage}
-                        alt="business"
-                        width={500}
-                        height={500}
-                    />
+                <div className="w-full md:w-1/2 flex justify-center">
+                    <div className="relative">
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-teal-500 rounded-full filter blur-3xl opacity-30 animate-blob"></div>
+                        <Image
+                            src={bussinessImage}
+                            alt="business"
+                            width={500}
+                            height={500}
+                            className="relative z-10 object-contain hover:scale-105 transition-transform duration-500"
+                        />
+                    </div>
                 </div>
-                {/* Right  Side */}
-                <div className="w-full  800px:[w-50%]">
-                    <h3 className={`${styles.title} 800px:!text-[40px]`}>
-                        Our Student are <span className="text-gradient"> Our Strength</span>
+                {/* Right Side */}
+                <div className="w-full md:w-1/2 flex flex-col text-center md:text-left">
+                    <h3 className="text-[32px] sm:text-4xl lg:text-5xl font-Poppins text-slate-900 dark:text-white font-bold leading-tight tracking-tight mb-6">
+                        Our Students are <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">Our Strength</span>
                         <br />
-                        See What They Say About Us
+                        See What They Say
                     </h3>
-                    <br />
-                    <p className={styles.label}>
+                    <p className="text-slate-600 dark:text-slate-400 font-Poppins text-lg leading-relaxed max-w-xl mx-auto md:mx-0">
                         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minus,
                         saepe. Totam libero nesciunt quas labore fuga voluptatem ipsa
                         provident officia hic, quasi vel numquam, similique illo. Veniam sed
                         eligendi ad labore qui unde omnis incidunt?
                     </p>
                 </div>
-                <br />
             </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:gap-10 mt-8">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8 mt-16">
                 {reviews &&
                     reviews.map((item: any, index: number) => (
                         <ReviewsCard item={item} key={index} />

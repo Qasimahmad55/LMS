@@ -53,13 +53,13 @@ const UserAnalytics = ({ isDashboard }: Props) => {
                 <div
                     className={`${!isDashboard
                         ? "mt-[50px]"
-                        : "mt-[50px] dark:bg-[#111C43] shadow-sm pb-5 rounded-sm"
+                        : "bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 transition-all h-full flex flex-col"
                         }`}
                 >
-                    <div className={`${isDashboard ? "!ml-8 mb-5" : ""}`}>
+                    <div className={`${isDashboard ? "mb-5 " : ""} ml-5`}>
                         <h1
-                            className={`${styles.title} ${isDashboard && "!text-[20px]"
-                                } px-5 !text-start`}
+                            className={`${styles.title} ${isDashboard && "!text-[24px] font-bold"
+                                } !text-start mb-2`}
                         >
                             Users Analytics
                         </h1>
@@ -71,7 +71,7 @@ const UserAnalytics = ({ isDashboard }: Props) => {
                     </div>
 
                     <div
-                        className={`w-full ${isDashboard ? "h-[30vh]" : "h-screen"
+                        className={`w-full ${isDashboard ? "flex-1 min-h-[30vh]" : "h-screen"
                             } flex items-center justify-center`}
                     >
                         <ResponsiveContainer

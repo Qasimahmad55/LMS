@@ -58,16 +58,17 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
     }, [updateError, isSuccess, deleteSuccess, deleteError, refetch]);
 
     const columns = [
-        { field: "id", headerName: "ID", flex: 0.3 },
-        { field: "name", headerName: "Name", flex: 0.5 },
-        { field: "email", headerName: "Email", flex: 0.5 },
-        { field: "role", headerName: "Role", flex: 0.5 },
-        { field: "courses", headerName: "Purchased Courses", flex: 0.5 },
-        { field: "created_at", headerName: "Joined At", flex: 0.5 },
+        { field: "id", headerName: "ID", minWidth: 100, flex: 0.5 },
+        { field: "name", headerName: "Name", minWidth: 120, flex: 0.6 },
+        { field: "email", headerName: "Email", minWidth: 160, flex: 0.8 },
+        { field: "role", headerName: "Role", minWidth: 80, flex: 0.3 },
+        { field: "courses", headerName: "Purchased Courses", minWidth: 130, flex: 0.5 },
+        { field: "created_at", headerName: "Joined At", minWidth: 100, flex: 0.4 },
         {
             field: " ",
             headerName: "Delete",
-            flex: 0.2,
+            width: 80,
+            sortable: false,
             renderCell: (params: any) => {
                 return (
                     <>
@@ -89,7 +90,8 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
         {
             field: "  ",
             headerName: "Email",
-            flex: 0.2,
+            width: 80,
+            sortable: false,
             renderCell: (params: any) => {
                 return (
                     <div className="flex justify-center items-center h-full">
@@ -143,13 +145,13 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
     };
 
     return (
-        <div className="mt-[120px]">
+        <div className="mt-[120px] px-4 md:px-8 pb-8">
             {isLoading ? (
                 <Loader />
             ) : (
-                <Box m="20px">
+                <Box className="w-full" sx={{ maxWidth: '100%', overflow: 'hidden' }}>
                     {isTeam && (
-                        <div className="w-full flex justify-end">
+                        <div className="w-full flex justify-end mb-4">
                             <div
                                 className={`${styles.button} !w-[200px] !rounded-[10px] dark:bg-[#57c7a3] !h-[35px] dark:border dark:border-[#ffffff6c]`}
                                 onClick={() => setActive(!active)}
@@ -159,58 +161,86 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
                         </div>
                     )}
                     <Box
-                        m="40px 0 0 0"
+                        className="bg-white dark:bg-[#111C43] shadow-md rounded-[10px] overflow-hidden border border-gray-200 dark:border-slate-800"
                         height="80vh"
                         sx={{
                             "& .MuiDataGrid-root": {
                                 border: "none",
                                 outline: "none",
+                                borderRadius: "10px !important",
+                                overflow: "hidden",
+                            },
+                            "& .MuiDataGrid-main": {
+                                overflow: "hidden",
                             },
                             "& .css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon": {
-                                color: theme === "dark" ? "#ffff" : "#000",
+                                color: theme === "dark" ? "#94a3b8 !important" : "#64748b !important",
                             },
                             "& .MuiDataGrid-sortIcon": {
-                                color: theme === "dark" ? "#fff" : "#000",
+                                color: theme === "dark" ? "#94a3b8 !important" : "#64748b !important",
                             },
                             "& .MuiDataGrid-row": {
-                                color: theme === "dark" ? "#fff" : "#000",
-                                borderBottom:
-                                    theme === "dark"
-                                        ? "1px solid #ffffff30!important"
-                                        : "1px solid #ccc!important",
+                                color: theme === "dark" ? "#e2e8f0 !important" : "#1e293b !important",
+                                borderBottom: theme === "dark"
+                                    ? "1px solid #1e293b !important"
+                                    : "1px solid #e2e8f0 !important",
                             },
                             "& .MuiTablePagination-root": {
-                                color: theme === "dark" ? "#000" : "#000",
+                                color: theme === "dark" ? "#cbd5e1 !important" : "#475569 !important",
                             },
                             "& .MuiDataGrid-cell": {
-                                borderBottom: "none!important",
+                                borderBottom: "none !important",
                             },
                             "& .name-column--cell": {
-                                color: theme === "dark" ? "#fff" : "#000",
+                                color: theme === "dark" ? "#e2e8f0 !important" : "#1e293b !important",
                             },
                             "& .MuiDataGrid-columnHeaders": {
-                                backgroundColor: theme === "dark" ? "#3e4396" : "#A4A9FC",
-                                borderBottom: "none",
-                                color: theme === "dark" ? "#000" : "#000",
+                                backgroundColor: theme === "dark" ? "#1a2555 !important" : "#f8fafc !important",
+                                borderBottom: theme === "dark" ? "1px solid #1e293b !important" : "1px solid #e2e8f0 !important",
+                                color: theme === "dark" ? "#94a3b8 !important" : "#64748b !important",
+                                fontWeight: "600 !important",
+                                fontSize: "13px !important",
+                                textTransform: "uppercase" as const,
+                                letterSpacing: "0.05em",
+                            },
+                            "& .MuiDataGrid-columnHeader": {
+                                backgroundColor: theme === "dark" ? "#1a2555 !important" : "#f8fafc !important",
+                                color: theme === "dark" ? "#94a3b8 !important" : "#64748b !important",
                             },
                             "& .MuiDataGrid-virtualScroller": {
-                                backgroundColor: theme === "dark" ? "#1F2A40" : "#F2F0F0",
+                                backgroundColor: theme === "dark" ? "#111C43 !important" : "#ffffff !important",
                             },
                             "& .MuiDataGrid-footerContainer": {
-                                color: theme === "dark" ? "#fff" : "#000",
-                                borderTop: "none",
-                                backgroundColor: theme === "dark" ? "#3e4396" : "#A4A9FC",
+                                color: theme === "dark" ? "#cbd5e1 !important" : "#475569 !important",
+                                borderTop: theme === "dark" ? "1px solid #1e293b !important" : "1px solid #e2e8f0 !important",
+                                backgroundColor: theme === "dark" ? "#1a2555 !important" : "#f8fafc !important",
                             },
                             "& .MuiCheckbox-root": {
-                                color:
-                                    theme === "dark" ? `#b7ebde !important` : `#000 !important`,
+                                color: theme === "dark" ? "#6366f1 !important" : "#6366f1 !important",
                             },
                             "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-                                color: `#fff !important`,
+                                color: theme === "dark" ? "#94a3b8 !important" : "#64748b !important",
+                            },
+                            "& .MuiDataGrid-row:hover": {
+                                backgroundColor: theme === "dark" ? "#162044 !important" : "#f1f5f9 !important",
+                            },
+                            "& .MuiDataGrid-row.Mui-selected": {
+                                backgroundColor: theme === "dark" ? "#1e2a5a !important" : "#eef2ff !important",
+                            },
+                            "& .MuiDataGrid-row.Mui-selected:hover": {
+                                backgroundColor: theme === "dark" ? "#243070 !important" : "#e0e7ff !important",
+                            },
+                            "& .MuiTablePagination-selectIcon": {
+                                color: theme === "dark" ? "#94a3b8 !important" : "#64748b !important",
                             },
                         }}
                     >
-                        <DataGrid checkboxSelection rows={rows} columns={columns} />
+                        <DataGrid
+                            checkboxSelection
+                            rows={rows}
+                            columns={columns}
+                            disableColumnMenu
+                        />
                     </Box>
                     {active && (
                         <Modal

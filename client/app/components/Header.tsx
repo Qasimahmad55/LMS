@@ -72,8 +72,8 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
         <div className='w-full relative' >
             <div className={
                 `${active
-                    ? "dark:bg-opacity-50 dark:bg-linear-to-b dark:from-gray-900 dark:to-black fixed top-0 left-0 w-full h-20 z-80 border-b dark:border-[#ffffff11c] shadow-xl transition duration-500 "
-                    : "w-full border-b dark:border-[#ffffff1c] h-20 z-80 dark:shadow "
+                    ? "dark:bg-slate-900/80 bg-white/80 backdrop-blur-md fixed top-0 left-0 w-full h-20 z-[80] border-b border-gray-200 dark:border-[#ffffff1c] shadow-sm transition-all duration-500 "
+                    : "w-full border-b border-transparent h-20 z-[80] transition-all duration-500 "
                 }`}>
                 <div className="w-[95%] 800px:w-[92%] m-auto py-2 h-full">
                     <div className="w-full h-20 flex items-center justify-between p-3">
@@ -127,11 +127,11 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
                 {/* mobile sidebar */}
                 {openSidebar && (
                     <div
-                        className="fixed w-full h-screen top-0 left-0 z-[99999] dark:bg-[unset] bg-[#00000024]"
+                        className="fixed w-full h-screen top-0 left-0 z-[99999] bg-black/40 backdrop-blur-sm"
                         onClick={handleClose}
                         id="screen"
                     >
-                        <div className="w-[70%] fixed z-[999999999] h-screen bg-white top-0 right-0 dark:bg-slate-900 dark:bg-opacity-90">
+                        <div className="w-[70%] md:w-[50%] fixed z-[999999999] h-screen bg-white dark:bg-slate-900 shadow-2xl top-0 right-0 transition-transform duration-300">
                             <NavItems activeItem={activeItem} isMobile={true} />
 
                             {userData ? (

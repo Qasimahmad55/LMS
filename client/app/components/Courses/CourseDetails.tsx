@@ -124,11 +124,11 @@ const CourseDetails = ({ data, setRoute, stripePromise, clientSecret, setOpen: O
                         </div>
                         <br />
                         <br />
-                        {/* Course Discryption */}
+                        {/* Course Discription */}
 
                         <div className="w-full">
                             <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
-                                Course Details
+                                Course Description
                             </h1>
                             <p className="text-[18px] mt-[20px] whitespace-pre-line w-full overflow-hidden text-black dark:text-white">
                                 {data.description}
@@ -280,10 +280,9 @@ const CourseDetails = ({ data, setRoute, stripePromise, clientSecret, setOpen: O
                                 />
                             </div>
                             <div className="w-full ">
-
-                                wraps your payment form and connects it to Stripe using:
+                                {/* wraps your payment form and connects it to Stripe using:
                                 stripePromise: your initialized Stripe instance
-                                clientSecret: links the form to a specific payment
+                                clientSecret: links the form to a specific payment */}
 
                                 {stripePromise && clientSecret && (
                                     <Elements stripe={stripePromise} options={{ clientSecret }}>
