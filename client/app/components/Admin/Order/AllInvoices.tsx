@@ -34,10 +34,10 @@ const AllInvoices = ({ isDashboard }: Props) => {
                 );
                 return {
                     ...order,
-                    userName: user?.name,
-                    userEmail: user?.email,
-                    title: course?.name,
-                    price: "$" + course.price,
+                    userName: user?.name || "Deleted User",
+                    userEmail: user?.email || "N/A",
+                    title: course?.name || "Deleted Course",
+                    price: "$" + (course?.price ?? 0),
                 };
             });
             setOrderData(temp);
