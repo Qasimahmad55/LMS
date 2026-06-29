@@ -127,9 +127,9 @@ const DashboardWidgets = ({ open }: Props) => {
                                         />
                                         <h5 className={`text-center pt-4 font-semibold ${ordersComparePercentage?.percentChange > 0 ? "text-green-500" : "text-red-500"}`}>
                                             {ordersComparePercentage?.percentChange > 0
-                                                ? "+" + ordersComparePercentage?.percentChange.toFixed(2)
+                                                ? "+" + ordersComparePercentage?.percentChange?.toFixed(2)
                                                 : "-" +
-                                                ordersComparePercentage?.percentChange.toFixed(2)}{" "}
+                                                ordersComparePercentage?.percentChange?.toFixed(2)}{" "}
                                             %
                                         </h5>
                                     </div>
@@ -154,9 +154,9 @@ const DashboardWidgets = ({ open }: Props) => {
                                         />
                                         <h5 className={`text-center pt-4 font-semibold ${userComparePercentage?.percentChange > 0 ? "text-green-500" : "text-red-500"}`}>
                                             {userComparePercentage?.percentChange > 0
-                                                ? "+" + userComparePercentage?.percentChange.toFixed(2)
+                                                ? "+" + userComparePercentage?.percentChange?.toFixed(2)
                                                 : "-" +
-                                                userComparePercentage?.percentChange.toFixed(2)}{" "}
+                                                userComparePercentage?.percentChange?.toFixed(2)}{" "}
                                             %
                                         </h5>
                                     </div>
